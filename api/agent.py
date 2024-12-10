@@ -262,18 +262,18 @@ workflow.add_edge("rewrite_email", END)
 # workflow.add_edge("state_printer", END)
 
 # Memory saver for checkpointing and saving previous messages for consistent accross the chat
-# memory = MemorySaver() memory not required for this project
+memory = MemorySaver()  # memory not required for this project
 
 # Compile
 graph = workflow.compile()
 
 
 def get_agent_response(email: str):
-    # config = {"configurable": {"thread_id": "1"}}
+    config = {"configurable": {"thread_id": "1"}}
 
     events = graph.stream(
         {"initial_email": email, "research_info": None, "num_steps": 0},
-        # config,
+        config,
         stream_mode="values",
     )
 
@@ -292,6 +292,6 @@ def get_agent_response(email: str):
     try:
         return response
     except:
-        raise Exception
+        return "error while generating llm response"
 
 # ADD BACK THE MEMORY FUNCTION AND SEE

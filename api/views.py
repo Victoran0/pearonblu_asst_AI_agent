@@ -16,13 +16,13 @@ import json
 
 class ChatViewSet(viewsets.ViewSet):
     def create(self, request):
+        if not request.data["body"]:
+            return Response({"response": "request does not have the body key and value"}, status=status.HTTP_400_BAD_REQUEST)
         email = request.data["body"]
-        if email == "":
-            raise ValueError
 
         agent_response = get_agent_response(email)
 
-        return Response({"response": agent_response}, status=status.HTTP_200_OK)
+        return Response(agent_response, status=status.HTTP_200_OK)
 
     def list(self, request):
 
