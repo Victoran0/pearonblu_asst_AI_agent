@@ -1,5 +1,5 @@
 "use client"
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import {AnimatePresence, motion} from 'framer-motion'
@@ -11,6 +11,8 @@ import {useChat} from 'ai/react'
 
 const Chat = () => {
   const [body, setBody] = useState<string>("")
+  const containerRef = useRef<HTMLDivElement | null>(null)
+
   const {input, handleInputChange, handleSubmit, messages} = useChat({
         api: '/api/chat',
         body: {
@@ -27,6 +29,12 @@ const Chat = () => {
         streamProtocol: 'text'
     });
 
+    useEffect(() => {
+    if (containerRef.current) {
+        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [messages])
+
 
   return (
     <div className="grid items-center justify-items-center min-h-screen p-2 pb-2 gap-2 sm:p-20 font-[family-name:var(--font-geist-sans)]">
@@ -35,14 +43,14 @@ const Chat = () => {
       </div>
       <div className="h-4"></div>
       <motion.div className='grid w-full max-h-fit mb-16 pl-[45px] items-end p-2 pb-4 rounded-lg bg-gray-200 shadow-inner dark:bg-gray-900'>
-        <div className="h-[40vh] overflow-y-scroll w-full flex flex-col gap-2" id='message-container'>
+        <div className="h-[40vh] overflow-y-scroll w-full flex flex-col gap-2" id='message-container' ref={containerRef}>
             <AnimatePresence mode='wait'>
                 {messages.map((message) => {
                     return (
                         <motion.div 
                             key={message.id}
                             layout='position'
-                            className={cn('z-10 mt-2 mr-4 max-w-[350px] break-words rounded-2xl bg-pink-200 dark:bg-gray-800', 
+                            className={cn('z-10 mt-2 mr-4 max-w-[700px] break-words rounded-2xl bg-pink-200 dark:bg-gray-800', 
                             {'self-end text-gray-900 dark:text-gray-100': message.role === 'user', 
                             'self-start bg-blue-500 text-white': message.role === 'assistant'
                             })}
@@ -75,7 +83,7 @@ const Chat = () => {
                     <span 
                     className='cursor-pointer px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-2xl'
                     onClick={() => {
-                        handleInputChange({target: {value: "What can i ask?"}})
+                        handleInputChange({target: {value: "I really enjoyed my stay at your hotel!, Thanks."}})
                     }}
                     >
                         I really enjoyed my stay at your hotel!, Thanks.
@@ -83,7 +91,7 @@ const Chat = () => {
                     <span 
                     className='cursor-pointer px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-2xl'
                     onClick={() => {
-                        handleInputChange({target: {value: "When is my next flight?"}})
+                        handleInputChange({target: {value: "Is there any executive room available?"}})
                     }}
                     >
                         Is there any executive room available?
@@ -91,7 +99,7 @@ const Chat = () => {
                     <span 
                     className='cursor-pointer px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-2xl'
                     onClick={() => {
-                        handleInputChange({target: {value: "When is my next meeting?"}})
+                        handleInputChange({target: {value: "What time do i get my breakfast?"}})
                     }}
                     >
                         What time do i get my breakfast?
