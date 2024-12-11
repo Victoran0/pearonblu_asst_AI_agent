@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 import { Send, SparkleIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import {useChat} from 'ai/react'
+import DOMPurify from 'dompurify'
 
 
 const Chat = () => {
@@ -14,8 +15,8 @@ const Chat = () => {
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   const {input, handleInputChange, handleSubmit, messages} = useChat({
-        api: '/api/chat',
-        body: {
+        api: '/api/chat', // path to our server route
+        body: { // the body of the request
           body
         },
         onError: error => {
@@ -30,10 +31,22 @@ const Chat = () => {
     });
 
     useEffect(() => {
-    if (containerRef.current) {
-        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        if (containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    }, [messages])
+
+    const formattedResponse = (text: string): string => {
+        // because html does not automatically intrepet \n as line or paragraph spacing we use this function
+        const formattedText = text.split('\n\n').map((paragraph) => // split the text by \n\n to get paragraphs
+            paragraph.split("\n") // split each paragraphs by \n to get each line
+            .map(line => line.trim()) // remove whitespaces on either end of the lines
+            .join('<br />') // join the splitted line of each paragraphs by html line breaks
+        )
+        .map(paragraph => `<p>${paragraph}</p>`) // transform each splitted paragraph into html paragraphs
+        .join("") // join then to form html paragraphed and line breaks texts
+        return formattedText 
     }
-  }, [messages])
 
 
   return (
@@ -49,7 +62,7 @@ const Chat = () => {
                     return (
                         <motion.div 
                             key={message.id}
-                            layout='position'
+                            layout='position' // only its position will animate
                             className={cn('z-10 mt-2 mr-4 max-w-[700px] break-words rounded-2xl bg-pink-200 dark:bg-gray-800', 
                             {'self-end text-gray-900 dark:text-gray-100': message.role === 'user', 
                             'self-start bg-blue-500 text-white': message.role === 'assistant'
@@ -59,10 +72,20 @@ const Chat = () => {
                                 type: 'easeOut',
                                 duration: 0.2
                             }}
-                        >
-                            <div className='px-3 py-2 text-[18px] leading-[20px]'>
-                                {message.content}
-                            </div>
+                        >   
+                            {message.role === 'user' ? (
+                                <div className='px-3 py-2 text-[18px] leading-[20px]'>
+                                    {message.content}
+                                </div>
+                            ) : (
+                                <div 
+                                    className='px-3 py-2 text-[18px] leading-[20px]'
+                                    dangerouslySetInnerHTML={{
+                                        __html: DOMPurify.sanitize(formattedResponse(message.content) ?? "",
+                                        {USE_PROFILES: {html: true}})
+                                    }}
+                                />
+                            )}
                         </motion.div>
                     )
                 })}

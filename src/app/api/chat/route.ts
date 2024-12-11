@@ -10,8 +10,9 @@ export async function POST(req: Request) {
     // console.log("The latest prompt: ", latestPrompt)
     try {
         const response = await axios.post(BASE_URL, {"body": latestPrompt})
-        console.log(response)
-        return new Response(await response.data, {status: 200})
+        // console.log(response)
+        const data = await response.data
+        return new Response(data, {status: 200})
         
     } catch (error) {
         console.error("The chat post request failed: ", error)
