@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
+import ModeToggle from "@/components/theme-toggle";
 
 export default function Home() {
   return (
@@ -13,6 +14,10 @@ export default function Home() {
         <Button>
           <Link href="/chat">Continue to Chat</Link>
         </Button>
+      </div>
+
+      <div className="fixed bottom-5 right-5">
+        <ModeToggle />
       </div>
     </div>
   );

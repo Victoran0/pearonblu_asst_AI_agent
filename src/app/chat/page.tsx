@@ -8,6 +8,7 @@ import { Send, SparkleIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import {useChat} from 'ai/react'
 import DOMPurify from 'dompurify'
+import ModeToggle  from "@/components/theme-toggle";
 
 
 const Chat = () => {
@@ -175,6 +176,9 @@ const Chat = () => {
         <Textarea placeholder="Write your email here." />
         <Button>Send email</Button>
       </div> */}
+      <div className="fixed bottom-5 right-5">
+        <ModeToggle />
+      </div>
     </div>
   )
 }
