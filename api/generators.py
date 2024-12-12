@@ -14,19 +14,20 @@ def email_category_generator(email: str):
         [
             (
                 "system",
-                "You are an Email Categorization Agent, highly skilled at analyzing customer emails and understanding their intent. Your role is to accurately and effectively categorize emails into meaningful and useful categories based on their content and context."
+                "You are an Email Categorization Agent for Pearon Blu Hotel, highly skilled at analyzing customer emails and understanding their intent. Your role is to accurately and effectively categorize emails into meaningful and useful categories based on their content and context."
             ),
             (
                 "human",
                 """
                 Analyze the provided email and categorize it into one of the following categories:
+                chat_history: For emails related to a previous mails sent to you or a previous response sent by you. For example, "can you remember my name", "but did i not tell you I left early", "it was around 6pm on friday".. anything that has to do with an ongoing/past conversation history.
                 price_enquiry: For inquiries about pricing.
-                customer_complaint: For complaints regarding products, services, or related terms.
-                product_enquiry: For questions about product features, benefits, or services (excluding pricing).
-                customer_feedback: For feedback on a product or service.
-                chat_related: For emails related to casual greetings and other straightforward questions/messages not related to products or services.
+                customer_complaint: For complaints regarding how the customerm was treated, our services, or related terms.
+                product_enquiry: For questions about our hotel features, benefits, or services (excluding pricing).
+                customer_feedback: For positive feedback on our hotel's service. For example: I really enjoyed my stay at the hotel!
+                chat_related: For emails related to casual greetings and other straightforward questions/messages not related to customer_feedback, pricing and other options.
                 off_topic: For emails unrelated to any of the listed categories.
-                Output a single category from the options (price_enquiry, customer_complaint, product_enquiry, customer_feedback, off_topic, chat_related). Your response should follow this format: 'category_name'.
+                Output a single category from the options (chat_history, price_enquiry, customer_complaint, product_enquiry, customer_feedback, off_topic, chat_related). Your response should follow this format: 'category_name'.
                 User's Email:
                 {initial_email}
                 """

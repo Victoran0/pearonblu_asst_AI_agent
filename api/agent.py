@@ -1,14 +1,19 @@
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain.schema import Document
 from langgraph.graph import END, StateGraph
+from langgraph.graph.message import add_messages
 from langgraph.checkpoint.memory import MemorySaver
 from typing_extensions import TypedDict
-from typing import List
+from typing import List, Annotated
 from dotenv import load_dotenv
 from .generators import rewrite_email_generator, draft_analysis_generator, draft_writer_generator, email_category_generator, search_keyword_generator, rewrite_router_generator, research_router_generator
+from langchain_groq import ChatGroq
 
 
 load_dotenv()
+
+#  LLM
+GROQ_LLM = ChatGroq(model="llama3-70b-8192")
 
 # Tool Setup
 web_search_tool = TavilySearchResults(k=1)
@@ -20,7 +25,7 @@ class GraphState(TypedDict):
     Represents the state of our graph.
 
     Attributes:
-        initial_email: email
+        initial_email: customer's email
         email_category: email category
         draft_email: LLM generation
         final_email: LLM generation
@@ -28,10 +33,10 @@ class GraphState(TypedDict):
         info_needed: whether to add search info
         num_steps: number of steps
     """
-    initial_email: str
+    initial_email: Annotated[list, add_messages]
     email_category: str
     draft_email: str
-    final_email: str
+    final_email: Annotated[list, add_messages]
     research_info: List[str]
     info_needed: bool
     num_steps: int
@@ -43,12 +48,17 @@ class GraphState(TypedDict):
 def categorize_email(state):
     """take the initial email and categorize it"""
     # print("---CATEGORIZING INITIAL EMAIL---")
-    initial_email = state['initial_email']
+    initial_email = state['initial_email'][-1]
     num_steps = int(state['num_steps'])
     num_steps += 1
 
     email_category = email_category_generator(initial_email)
-    # print(email_category)
+    print(f"-----------The email's category-----------{email_category}")
+
+    if email_category == "chat_history":
+        final_email = GROQ_LLM.invoke(initial_email)
+        print('----------The chat history response:----------', final_email)
+        return {"email_category": email_category, "final_email": [final_email], "num_steps": num_steps}
 
     return {"email_category": email_category, "num_steps": num_steps}
 
@@ -56,7 +66,7 @@ def categorize_email(state):
 def research_info_search(state):
 
     # print("---RESEARCH INFO SEARCHING---")
-    initial_email = state["initial_email"]
+    initial_email = state["initial_email"][-1]
     email_category = state["email_category"]
     num_steps = state['num_steps']
     num_steps += 1
@@ -84,7 +94,7 @@ def research_info_search(state):
 def draft_email_writer(state):
     # print("---DRAFT EMAIL WRITER---")
     # Get the state
-    initial_email = state["initial_email"]
+    initial_email = state["initial_email"][-1]
     email_category = state["email_category"]
     research_info = state["research_info"]
     num_steps = state['num_steps']
@@ -104,7 +114,7 @@ def draft_email_writer(state):
 def analyze_draft_email(state):
     # print("---DRAFT EMAIL ANALYZER---")
     # Get the state
-    initial_email = state["initial_email"]
+    initial_email = state["initial_email"][-1]
     email_category = state["email_category"]
     draft_email = state["draft_email"]
     research_info = state["research_info"]
@@ -126,7 +136,7 @@ def analyze_draft_email(state):
 def rewrite_email(state):
     # print("---ReWRITE EMAIL ---")
     # Get the state
-    initial_email = state["initial_email"]
+    initial_email = state["initial_email"][-1]
     email_category = state["email_category"]
     draft_email = state["draft_email"]
     research_info = state["research_info"]
@@ -142,7 +152,7 @@ def rewrite_email(state):
                                            "email_analysis": draft_email_feedback}
                                           )
 
-    return {"final_email": final_email['final_email'], "num_steps": num_steps}
+    return {"final_email": [final_email['final_email']], "num_steps": num_steps}
 
 
 def no_rewrite(state):
@@ -152,11 +162,11 @@ def no_rewrite(state):
     num_steps = state['num_steps']
     num_steps += 1
 
-    return {"final_email": draft_email, "num_steps": num_steps}
+    return {"final_email": [draft_email], "num_steps": num_steps}
 
 
-def state_printer(state):
-    """print the state"""
+# def state_printer(state):
+    # """print the state"""
     # print("---STATE PRINTER---")
     # print(f"Initial Email: {state['initial_email']} \n")
     # print(f"Email Category: {state['email_category']} \n")
@@ -165,7 +175,7 @@ def state_printer(state):
     # print(f"Research Info: {state['research_info']} \n")
 
     # print(f"Num Steps: {state['num_steps']} \n")
-    return
+    # return
 
 # CONDITIONAL EDGES
 
@@ -180,7 +190,7 @@ def route_to_research(state):
     """
 
     # print("---ROUTE TO RESEARCH---")
-    initial_email = state["initial_email"]
+    initial_email = state["initial_email"][-1]
     email_category = state["email_category"]
 
     router = research_router_generator(initial_email, email_category)
@@ -200,7 +210,7 @@ def route_to_research(state):
 def route_to_rewrite(state):
 
     # print("---ROUTE TO REWRITE---")
-    initial_email = state["initial_email"]
+    initial_email = state["initial_email"][-1]
     email_category = state["email_category"]
     draft_email = state["draft_email"]
 
@@ -265,14 +275,14 @@ workflow.add_edge("rewrite_email", END)
 memory = MemorySaver()  # memory not required for this project
 
 # Compile
-graph = workflow.compile()
+graph = workflow.compile(checkpointer=memory)
+config = {"configurable": {"thread_id": "1"}}
 
 
 def get_agent_response(email: str):
-    config = {"configurable": {"thread_id": "1"}}
 
     events = graph.stream(
-        {"initial_email": email, "research_info": None, "num_steps": 0},
+        {"initial_email": [email], "research_info": None, "num_steps": 0},
         config,
         stream_mode="values",
     )
@@ -285,12 +295,13 @@ def get_agent_response(email: str):
             # event[value][-1].pretty_print()
             # print(f"Finished running: {key}:")
 
-    # snapshot = graph.get_state()
-    # print(snapshot)
+    snapshot = graph.get_state(config)
+    print(f"The snapshot:----------------------{snapshot}")
     # print(f"The final response to the email: {snapshot.values['final_email']}")
     # return snapshot.values['final_email']
+    print(f"The response:-----------------------{response[-1].content}")
     try:
-        return response
+        return response[-1].content
     except:
         return "error while generating llm response"
 
