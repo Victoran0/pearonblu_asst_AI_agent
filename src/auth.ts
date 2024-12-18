@@ -29,12 +29,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
         credentials: {
-            username: {label: 'Username', type: 'text'},
-            password: {label: 'Password', type: 'password'},
+            username: {},
+            password: {},
         },
         async authorize(credentials) {
-            console.log('the credentials submitted; ',credentials)
             try {
+                // console.log('the credentials submitted; ', credentials)
                 // Authenticate with the backend here
                 const res = await axios.post('http://127.0.0.1:8000/api/login/', {
                     username: credentials.username,
