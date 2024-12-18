@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import {useChat} from 'ai/react'
 import DOMPurify from 'dompurify'
 import ModeToggle  from "@/components/theme-toggle";
+import { signIn } from "next-auth/react";
 
 
 const Chat = () => {
@@ -204,6 +205,9 @@ const Chat = () => {
             </form>
         </div>
         </motion.div>
+        <button onClick={() => signIn()}>
+                    why you
+        </button>
     </div>
   )
 }

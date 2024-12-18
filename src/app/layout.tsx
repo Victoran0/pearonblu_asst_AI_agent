@@ -5,6 +5,9 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/components/theme-provider"
 
+import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -23,15 +26,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  session
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}> & {session?: Session}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       > 
-        <ThemeProvider
+        <SessionProvider session={session}>
+          <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
@@ -39,6 +44,7 @@ export default function RootLayout({
           >
             {children}
           </ThemeProvider>
+        </SessionProvider>
         <Toaster />
       </body>
     </html>

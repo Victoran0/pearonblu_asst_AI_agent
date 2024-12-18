@@ -33,3 +33,4 @@ export default function Home() {
 // create a /admin where the admin can login and do their work
 // request for a user's username and password on the home page before showing the chat page
 // if they are logged in (use session cookies), redirect to the chat page, else redirect to login page
+// add a newchat option to create a unique threadId, also we can save old chats by their threadId 

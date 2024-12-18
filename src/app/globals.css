@@ -159,3 +159,171 @@ body {
     box-shadow: 10014px 0 0 -5px;
   }
 }
+
+/* LOGIN PAGE */
+.loginContainer {
+  max-width: 400px;
+  width: 100%;
+  /* padding: 2rem; */
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: auto;
+  margin-top: 5%;
+}
+
+.loginContainer h1 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.loginContainer .footer {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 0;
+  margin-top: 2rem;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.loginContainer label {
+  font-size: 0.9rem;
+  color: #555;
+  text-align: left;
+}
+
+.inputField {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.forgotPassword {
+  align-self: flex-end;
+  font-size: 0.8rem;
+  color: #0066cc;
+  text-decoration: none;
+  margin-top: -0.5rem;
+  margin-bottom: 1rem;
+}
+
+.forgotPassword:hover {
+  text-decoration: underline;
+}
+
+.loginButton,
+.createAccountButton {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.loginButton {
+  background-color: #003d4d;
+  color: #fff;
+}
+
+.loginButton:hover {
+  background-color: #002b38;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.createAccountButton {
+  background-color: transparent;
+  border: 1px solid #003d4d;
+  color: #003d4d;
+}
+
+.createAccountButton:hover {
+  background-color: #003d4d;
+  color: #fff;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1rem 0;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #ddd;
+  margin: 0 0.5rem;
+}
+
+.socialLogin {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.socialLogin:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.google {
+  color: #4285f4;
+}
+
+.office {
+  color: #d83b01;
+}
+
+.terms {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 1.5rem;
+}
+
+.terms a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.terms a:hover {
+  text-decoration: underline;
+}
+
+.createBtn {
+  margin-top: 1.2rem;
+}
