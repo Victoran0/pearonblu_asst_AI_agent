@@ -5,6 +5,7 @@ import vercelKVDriver from "unstorage/drivers/vercel-kv"
 import { UnstorageAdapter } from "@auth/unstorage-adapter"
 import axios from "axios"
 import Credentials from "next-auth/providers/credentials"
+import CredentialsProvider from 'next-auth/providers/credentials'
 import "next-auth/jwt"
 import { DecodedToken, UserData, UserSession } from '@/types';
 import {jwtDecode} from 'jwt-decode';
@@ -26,19 +27,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: !!process.env.AUTH_DEBUG,
 //   theme: { logo: "https://authjs.dev/img/logo-sm.png" },
   adapter: UnstorageAdapter(storage),
+  pages: {
+    signIn: '/login',
+  },
   providers: [
-    Credentials({
+    CredentialsProvider({
+        name: 'Credentials',
         credentials: {
-            username: {},
-            password: {},
+            username: { label: "Username", type: "text" },
+            password: { label: "Password", type: "password" },
         },
         async authorize(credentials) {
             try {
-                // console.log('the credentials submitted; ', credentials)
                 // Authenticate with the backend here
                 const res = await axios.post('http://127.0.0.1:8000/api/login/', {
-                    username: credentials.username,
-                    password: credentials.password
+                    credentials
                 });
                 const {refresh, access, username} = await res.data
 
@@ -51,13 +54,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 }
                 return  response;
             } catch (error: any) {
-                console.error("Login failed.", error?.response?.data);
-                return null;
+                console.error("-------- Login failed.", error?.response?.data);
+                throw error
+                // return null;
             }
         }
     })
   ],
-  basePath: "/auth",
+  basePath: "/api/auth",
   session: { strategy: "jwt" },
   callbacks: {
     authorized({ request, auth }) {

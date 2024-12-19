@@ -199,7 +199,7 @@ body {
   gap: 1rem;
 }
 
-.loginContainer label {
+.loginForm label {
   font-size: 0.9rem;
   color: #555;
   text-align: left;

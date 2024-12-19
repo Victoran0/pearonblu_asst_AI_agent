@@ -35,7 +35,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       > 
-        <SessionProvider session={session}>
+        {/* <SessionProvider session={session}> */}
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -44,7 +44,7 @@ export default function RootLayout({
           >
             {children}
           </ThemeProvider>
-        </SessionProvider>
+        {/* </SessionProvider> */}
         <Toaster />
       </body>
     </html>
