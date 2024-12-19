@@ -1,15 +1,22 @@
 "use server"
 import axios from 'axios'
+import { auth } from '@/auth'
 
-const BASE_URL = "http://127.0.0.1:8000/api/chat/"
 
 export async function POST(req: Request) {
     const {messages} = await req.json()
     const latestPrompt = messages[messages.length - 1]
+    const session = await auth()
+    if (!session?.user) return new Response("Unauthorized", {status: 401})
+    
     // console.log("The full messages: ", messages)
     // console.log("The latest prompt: ", latestPrompt)
+
     try {
-        const response = await axios.post(BASE_URL, {"body": latestPrompt})
+        const response = await axios.post(`${process.env.BASE_URL}/chat/`, {
+            "body": latestPrompt, 
+            headers: {Authorization: `Bearer ${session.accessToken}`
+        }})
         // console.log(response)
         const data = await response.data
         return new Response(data, {status: 200})
