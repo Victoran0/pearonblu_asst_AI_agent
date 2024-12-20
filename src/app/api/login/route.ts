@@ -5,15 +5,16 @@ import { AuthError } from "next-auth";
 export async function POST(req: Request) {
     const {username, password} = await req.json()
     
-    const formData = new FormData()
-    formData.append("username", username)
-    formData.append("password", password)
-
-    // console.log("the username: ", username, "the password: ", password)
-
     try {
-        const response = await signIn('credentials', formData, { redirectTo: "/chat" });
+        const response = await signIn('credentials', {
+            redirect: true, // Allow redirection
+            redirectTo: '/chat',
+            username: username,
+            password: password,
+        });
+        
         console.log("the sign in response: ", response)
+        
     } catch (error: any) {
         if (error instanceof AuthError) {
         switch (error.type) {

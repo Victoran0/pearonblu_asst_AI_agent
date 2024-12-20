@@ -30,7 +30,7 @@ export default function Home() {
 }
 
 // ADD THE TOGGLE DARK MODE AND ADMIN LOGIN FUNCTIONALITY
-// two authentication class, admin and user
+// isStaff status to enter the /admin page
 // admin panel to create and destroy login credentials
 // only admin can create / delete a user for the application
 // create a /admin where the admin can login and do their work

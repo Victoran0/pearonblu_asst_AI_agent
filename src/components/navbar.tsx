@@ -9,6 +9,9 @@ import { signOut, useSession } from "next-auth/react";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const {data: session} = useSession()
+  const capitalizeUsername = (username: string): string => {
+    return username.charAt(0).toUpperCase() + username.slice(1)
+  }
 
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-md">
@@ -19,7 +22,7 @@ export default function Navbar() {
             <Link href="/" className="text-xl font-bold colorGradText text-gray-800 dark:text-white">
               Pearon Blu
             </Link>
-            {session?.username ? (<span className="pl-10 text-stone-500">Welcome {session.username}!</span>) : " "}
+            {session?.username ? (<span className="pl-10 text-stone-500">Welcome {capitalizeUsername(session.username)}!</span>) : " "}
           </div>
 
           {/* Desktop Navigation */}
@@ -44,8 +47,8 @@ export default function Navbar() {
             </a>
             {session?.username !== undefined ? (
                 <Link
-                    href="/signout"
-                    onClick={() => signOut()}
+                    href=""
+                    onClick={() => signOut({redirectTo: '/login', redirect: true})}
                     className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
                 >
                     Sign out
@@ -125,8 +128,8 @@ export default function Navbar() {
             </a>
             {session?.username !== undefined ? (
                 <Link
-                    href="/signout"
-                    onClick={() => signOut()}
+                    href=""
+                    onClick={() => signOut({redirectTo: '/login', redirect: true})}
                     className="block text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-2"
                 >
                     Sign out

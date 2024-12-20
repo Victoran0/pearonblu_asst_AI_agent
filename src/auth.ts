@@ -29,6 +29,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: UnstorageAdapter(storage),
   pages: {
     signIn: '/login',
+    signOut: '/signout',
   },
   providers: [
     CredentialsProvider({
@@ -92,9 +93,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({session, token}: {session: UserSession, token: UserData}) {
         // Add token and user info to the session
         session.accessToken = token.accessToken;
-        session.refreshToken = token.refreshToken;
         session.username = token.username;
-        session.accessTokenExpires = token.accessTokenExpires;
 
         return session;
     }

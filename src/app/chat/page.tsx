@@ -8,7 +8,6 @@ import LoginPage from "../login/page";
 
 const Chat = () => {
 
-    // if (!session?.user) return <LoginPage />
     return <ChatBody />
 }
 

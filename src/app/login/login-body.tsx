@@ -2,12 +2,12 @@
 import React, {useState, useRef, FormEvent}  from 'react';
 import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { formData } from '@/types';
 import axios from 'axios';
 
 
-const LoginBody = ({provider}: {provider?: string}) => {
+const LoginBody = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -68,7 +68,7 @@ const LoginBody = ({provider}: {provider?: string}) => {
         try {
             const response = await axios.post('/api/login', {username, password})
             console.log("the response: ", response.data)
-            
+            router.push('/chat')
         } catch (error) {
             console.error("error: ", error)
             setError('Login failed. Please check your credentials.');
