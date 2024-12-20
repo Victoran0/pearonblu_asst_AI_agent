@@ -14,11 +14,12 @@ import { useTheme } from "next-themes";
 
 
 const ChatBody = () => {
-  const [body, setBody] = useState<string>("")
-  const containerRef = useRef<HTMLDivElement | null>(null)
-  const [responseLoaded, setResponseLoaded] = useState<boolean>(false)
+    const [body, setBody] = useState<string>("")
+    const containerRef = useRef<HTMLDivElement | null>(null)
+    const [responseLoaded, setResponseLoaded] = useState<boolean>(false)
     const {data: session, update} = useSession({required: true})
     const {theme} = useTheme()
+    const loadingRef = useRef<HTMLDivElement | null>(null)  
 
 
   const {input, handleInputChange, handleSubmit, messages} = useChat({
@@ -27,12 +28,19 @@ const ChatBody = () => {
           body
         },
         onError: (error: any) => {
-            toast.error(error.message ?? error)
+            toast.error("internal server error")
             console.log("useChat error: ", error)
+            setResponseLoaded(true)
+            if (loadingRef.current) {
+                loadingRef.current.remove()
+            }
         },
         onFinish: () => {
             console.log("finished")
             setResponseLoaded(true)
+            if (loadingRef.current) {
+                loadingRef.current.remove()
+            }
         },
         initialMessages: [],
         streamProtocol: 'text'
@@ -107,6 +115,7 @@ const ChatBody = () => {
                         </motion.div>
                         {message.role === 'user' ? (
                         <motion.div 
+                            ref={loadingRef}
                             key={`${uniqueId}-loading`}
                             className="z-10 mt-2 mr-4 max-w-[700px] break-words rounded-2xl dark:bg-gray-800 self-start bg-blue-500 text-white"
                             layoutId={`container-[${parseInt(message.id) === 0 ? -1.20 : parseInt(message.id) ** -3.22}]`}
@@ -115,7 +124,7 @@ const ChatBody = () => {
                                 duration: 0.2
                             }}
                         >
-                            {responseLoaded ? "" : (
+                            {!responseLoaded && (
                             <div className="col-3">
                                 <div className="snippet" data-title="dot-pulse">
                                 <div className="stage">
