@@ -8,7 +8,7 @@ const AsstHeader = () => {
     const {theme} = useTheme()
 
     return (
-        <div className={cn("flex items-center colorGradText", theme === "light"?"bdBox":"")}>
+        <div className={cn("flex w-fit items-center colorGradText", theme === "light"?"bdBox":"")}>
             <Link href="/chat">
                 <h1 className="pl-5 text-2xl py-2" >Pearon Blu Assistant</h1>
             </Link>

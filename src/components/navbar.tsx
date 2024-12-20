@@ -4,7 +4,7 @@ import { useState } from "react";
 import { cn } from "@/lib/utils"; // Optional: Utility function for class management
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,12 +42,23 @@ export default function Navbar() {
             >
               Contact
             </a>
-            <Link
-              href="/signout"
-              className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
-            >
-              Sign out
-            </Link>
+            {session?.username !== undefined ? (
+                <Link
+                    href="/signout"
+                    onClick={() => signOut()}
+                    className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
+                >
+                    Sign out
+                </Link>
+            ) : (
+                <Link
+                    href="/login"
+                    className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
+                >
+                    Log in
+                </Link>
+            )}
+            
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -95,12 +106,6 @@ export default function Navbar() {
         <div className="md:hidden">
           <div className="space-y-1 px-4 pb-4">
             <a
-              href="#home"
-              className="block text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-2"
-            >
-              Home
-            </a>
-            <a
               href="#about"
               className="block text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-2"
             >
@@ -118,6 +123,22 @@ export default function Navbar() {
             >
               Contact
             </a>
+            {session?.username !== undefined ? (
+                <Link
+                    href="/signout"
+                    onClick={() => signOut()}
+                    className="block text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-2"
+                >
+                    Sign out
+                </Link>
+            ) : (
+                <Link
+                    href="/login"
+                    className="block text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-2"
+                >
+                    Log in
+                </Link>
+            )}
           </div>
         </div>
       )}

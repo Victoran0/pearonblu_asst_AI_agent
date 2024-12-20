@@ -127,6 +127,7 @@ const LoginBody = ({provider}: {provider?: string}) => {
                     </p>
                     <p className="footer">© 2024 Pearon Blu. All rights reserved.</p>
                 </div>
+                <div className="h-10"></div>
             </main>
         </>
     );
