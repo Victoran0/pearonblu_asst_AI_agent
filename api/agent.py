@@ -296,13 +296,13 @@ def get_agent_response(email: str):
             # print(f"Finished running: {key}:")
 
     snapshot = graph.get_state(config)
-    print(f"The snapshot:----------------------{snapshot}")
+    # print(f"The snapshot:----------------------{snapshot}")
     # print(f"The final response to the email: {snapshot.values['final_email']}")
     # return snapshot.values['final_email']
-    print(f"The response:-----------------------{response[-1].content}")
+    # print(f"The response:-----------------------{response[-1].content}")
     try:
         return response[-1].content
     except:
-        return "error while generating llm response"
+        return ValueError("An error occured while processing the request")
 
 # ADD BACK THE MEMORY FUNCTION AND SEE

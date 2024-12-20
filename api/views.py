@@ -10,17 +10,12 @@ import json
 # Create your views here.
 
 
-# @api_view(['POST'])
-# def getPrompt(request):
-#     print(request.data)
-
-#     return Response({"message": "use a post request to send a prompt"}, status=status.HTTP_200_OK)
-
 class LoginViewSet(viewsets.ViewSet):
     permission_classes = [AllowAny]
 
     def create(self, request):
         serializer = LoginSerializer(data=request.data)
+        print("The submitted data: ", request.data)
 
         if serializer.is_valid():
             user = serializer.validated_data['user']
@@ -30,6 +25,7 @@ class LoginViewSet(viewsets.ViewSet):
             refresh_token = str(refresh)
             access_token = str(refresh.access_token)
             return Response({'refresh': refresh_token, 'access': access_token, 'username': username}, status=status.HTTP_200_OK)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -42,9 +38,11 @@ class ChatViewSet(viewsets.ViewSet):
             return Response({"response": "request does not have the body key and value"}, status=status.HTTP_400_BAD_REQUEST)
         email = request.data["body"]
 
-        agent_response = get_agent_response(email)
-
-        return Response(agent_response, status=status.HTTP_200_OK)
+        try:
+            agent_response = get_agent_response(email)
+            return Response(agent_response, status=status.HTTP_200_OK)
+        except:
+            return Response({"response": "An error occured while processing the request"}, status=status.HTTP_400_BAD_REQUEST)
 
     def list(self, request):
 
