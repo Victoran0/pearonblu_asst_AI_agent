@@ -1,23 +1,26 @@
+"use client"
 import React, {useState, useEffect} from "react";
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
 import ModeToggle from "@/components/theme-toggle";
 import { Separator } from "@/components/ui/separator";
+import { useTheme } from "next-themes";
+import AsstHeader from "@/components/asst-header";
 
 export default function Home() {
+  const {setTheme} = useTheme()
+
+  useEffect(() => {
+    setTheme("dark")
+  }, [])
+  
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div className="flex items-center">
-        <h1>Pearon Blu Assistant</h1>
-        <div className="w-10"></div>
-        <ModeToggle />
-      </div>
-      <div className="grid w-full gap-2">
-        <Button>
-          <Link href="/chat">Continue to Chat</Link>
-        </Button>
-      </div>
+      <AsstHeader />
+      <Link href="/chat">
+        <h1 className="text-9xl text-zinc-900 colorGradText">Continue to Chat</h1>
+      </Link>
 
       <div className="fixed bottom-5 right-5">
         

@@ -4,12 +4,14 @@ export interface UserData extends User {
     refreshToken?: string;
     accessToken?: string;
     username?: string;
+    accessTokenExpires?: number;
 }
 
 export type UserSession = Session & {
     refreshToken?: string;
     accessToken?: string;
     username?: string;
+    accessTokenExpires?: number;
 }
 
 export interface DecodedToken {
@@ -23,6 +25,7 @@ declare module "next-auth" {
     refreshToken?: string;
     accessToken?: string;
     username?: string;
+    accessTokenExpires?: number;
   }
 }
 

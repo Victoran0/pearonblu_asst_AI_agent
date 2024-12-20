@@ -40,8 +40,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         async authorize(credentials) {
             try {
                 // Authenticate with the backend here
-                const res = await axios.post('http://127.0.0.1:8000/api/login/', {
-                    credentials
+                const res = await axios.post(`${process.env.BASE_URL}/login/`, {
+                    username: credentials.username,
+                    password: credentials.password
                 });
                 const {refresh, access, username} = await res.data
 
@@ -93,6 +94,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.accessToken = token.accessToken;
         session.refreshToken = token.refreshToken;
         session.username = token.username;
+        session.accessTokenExpires = token.accessTokenExpires;
 
         return session;
     }
@@ -101,10 +103,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 })
 
 // Helper function to refresh the Access Token
-async function refreshAccessToken(token: JWT) {
+export async function refreshAccessToken(token: JWT) {
     try {
-        const response = await axios.post("http://127.0.0.1:8000/api/token/refresh/", {
-            refresh: token.refreshToken,
+        const refreshToken = token.refreshToken as string;
+        const response = await axios.post(`${process.env.BASE_URL}/token/refresh/`, {
+            refresh: refreshToken.toString(),
+        }, {
+            headers: { 'Content-Type': 'application/json' }
         });
         const {access} = response.data;
         const decoded: DecodedToken = jwtDecode(access);
@@ -114,7 +119,7 @@ async function refreshAccessToken(token: JWT) {
             accessTokenExpires: decoded.exp * 1000 //convert to milliseconds
         };
     } catch (error: any) {
-        console.error("Failed to refresh access token: ", error.response?.data || error.message);
+        console.error("---------Failed to refresh access token: ", error.response?.data || error.message);
 
         return {
             ...token,

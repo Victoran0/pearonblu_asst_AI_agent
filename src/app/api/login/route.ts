@@ -12,7 +12,7 @@ export async function POST(req: Request) {
     // console.log("the username: ", username, "the password: ", password)
 
     try {
-        const response = await signIn('credentials', formData, "/chat");
+        const response = await signIn('credentials', formData, { redirectTo: "/chat" });
         console.log("the sign in response: ", response)
     } catch (error: any) {
         if (error instanceof AuthError) {

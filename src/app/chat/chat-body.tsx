@@ -1,7 +1,5 @@
 "use client"
 import React, {useState, useEffect, useRef} from "react";
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
 import {AnimatePresence, motion} from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Send, SparkleIcon } from 'lucide-react'
@@ -11,13 +9,16 @@ import DOMPurify from 'dompurify'
 import ModeToggle  from "@/components/theme-toggle";
 import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react"
+import AsstHeader from "@/components/asst-header";
+import { useTheme } from "next-themes";
 
 
-const ChatBody = async () => {
+const ChatBody = () => {
   const [body, setBody] = useState<string>("")
   const containerRef = useRef<HTMLDivElement | null>(null)
   const [responseLoaded, setResponseLoaded] = useState<boolean>(false)
     const {data: session, update} = useSession({required: true})
+    const {theme} = useTheme()
 
 
   const {input, handleInputChange, handleSubmit, messages} = useChat({
@@ -25,8 +26,8 @@ const ChatBody = async () => {
         body: { // the body of the request
           body
         },
-        onError: error => {
-            toast.error(error.message)
+        onError: (error: any) => {
+            toast.error(error.message ?? error)
             console.log("useChat error: ", error)
         },
         onFinish: () => {
@@ -65,13 +66,12 @@ const ChatBody = async () => {
 
   return (
     <div className="grid items-center justify-items-center min-h-screen p-2 pb-2 gap-2 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <div className="flex items-center">
-        <h1>Pearon Blu Assistant</h1>
-        <div className="w-10"></div>
-        <ModeToggle />
-      </div>
+      <AsstHeader/>
       <div className="h-4"></div>
-      <motion.div className='grid w-full max-h-fit mb-16 pl-[45px] items-end p-2 pb-4 rounded-lg bg-gray-200 shadow-inner dark:bg-gray-900'>
+
+      <motion.div className='grid w-full max-h-fit mb-16 pl-[55px] items-end py-2 pb-4 rounded-lg bg-gray-200 shadow-inner dark:bg-gray-900'>
+
+        {messages.length > 0 && (
         <div className="h-[40vh] overflow-y-scroll w-full flex flex-col gap-2" id='message-container' ref={containerRef}>
             <AnimatePresence mode='wait'>
                 {messages.map((message, index) => {
@@ -131,20 +131,24 @@ const ChatBody = async () => {
                 })}
             </AnimatePresence>
         </div>
+        )}
+
         {messages.length > 0 && <div className='h-4'/>}
-        <div className="w-full">
-            {messages.length === 0 && <div className='mb-4'>
-                <div className="flex items-center gap-4">
+        
+        <div>
+            {messages.length === 0 && <div className='mb-4 h-[40vh] flex items-center flex-col gap-10'>
+                <div className="pt-10 flex items-center gap-4">
                     <SparkleIcon className='size-12 text-gray-600' />
-                    <div>
-                        <p className="text-gray-950 text-2xl dark:text-gray-100">Let Pearon Blu assistant reply the emails professionally</p>
-                        <p className="text-gray-500 text-2xl dark:text-gray-400">Get response for the customers emails</p>
+                    <div className="flex items-start flex-col gap-2">
+                        <p className="text-gray-950 bgColorGrad text-2xl dark:text-gray-100">Let Pearon Blu assistant reply emails professionally</p>
+                        <p className="text-gray-500 text-2xl px-2 dark:text-gray-400 stretchText mt-2">Get response for customers' emails</p>
                     </div>
                 </div>
+
                 <div className="h-2"></div>
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="pl-3 flex items-center gap-2 flex-wrap">
                     <span 
-                    className='cursor-pointer px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-2xl'
+                    className={cn('cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
                     onClick={() => {
                         handleInputChange({target: {value: "I really enjoyed my stay at your hotel!, Thanks."}})
                     }}
@@ -152,7 +156,7 @@ const ChatBody = async () => {
                         I really enjoyed my stay at your hotel!, Thanks.
                     </span>
                     <span 
-                    className='cursor-pointer px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-2xl'
+                    className={cn('cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
                     onClick={() => {
                         handleInputChange({target: {value: "Is there any executive room available?"}})
                     }}
@@ -160,7 +164,7 @@ const ChatBody = async () => {
                         Is there any executive room available?
                     </span>
                     <span 
-                    className='cursor-pointer px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-2xl'
+                    className={cn('cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
                     onClick={() => {
                         handleInputChange({target: {value: "What time do i get my breakfast?"}})
                     }}
@@ -168,7 +172,7 @@ const ChatBody = async () => {
                         What time do i get my breakfast?
                     </span>
                     <span 
-                    className='cursor-pointer px-2 py-1 bg-gray-800 text-gray-200 rounded-md text-2xl'
+                    className={cn('cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
                     onClick={() => {
                         handleInputChange({target: {value: "I hated my stay at your hotel! you guys suck!!!"}})
                     }}
@@ -177,7 +181,7 @@ const ChatBody = async () => {
                     </span>
                 </div>
             </div>}
-            <form className='w-full flex' onSubmit={handleFormSubmit} >
+            <form className='flex' onSubmit={handleFormSubmit} >
                 <input 
                     type="text" className='py-1 w-full relative h-16 placeholder:text-[20px] flex-grow rounded-full border border-gray-200 bg-white pl-6 pr-24 text-[20px] outline-none placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-blue-500/20 focus-visible:ring-offset-1
                     dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 dark:focus-visible:ring-blue-500/20 dark:focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-700'
@@ -202,15 +206,13 @@ const ChatBody = async () => {
                         {input}
                     </div>
                 </motion.div>
+                
                 <button title='send' type="submit" className='relative right-[68px] top-1 ml-2 flex size-14 items-center justify-center rounded-full bg-gray-200 dark:border-y-gray-800 dark:bg-gray-600'>
                     <Send className='size-6 text-gray-500 dark:text-gray-300' />
                 </button>
             </form>
         </div>
         </motion.div>
-        <button onClick={() => signIn()}>
-                    why you
-        </button>
     </div>
   )
 }

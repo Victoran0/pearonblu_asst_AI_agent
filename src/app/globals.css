@@ -327,3 +327,42 @@ body {
 .createBtn {
   margin-top: 1.2rem;
 }
+
+/* AuthNav */
+.colorGradText {
+  border-radius: 50px;
+  padding: 2px 12px 2px 5px;
+  border: 2px solid transparent;
+  background-image: linear-gradient(#f3f4f60a, #f3f4f60a),
+    linear-gradient(45deg, #ff6ec7, #7367f0);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+.bgColorGrad {
+  border-radius: 50px;
+  padding: 2px 12px 2px 12px;
+  border: 2px solid transparent;
+  background-image: linear-gradient(#f3f4f60a, #f3f4f60a),
+    linear-gradient(45deg, #ff6ec7, #7367f0);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.bdBox {
+  box-shadow: 0px 4px 15px rgba(115, 103, 240, 0.6);
+}
+
+.bbBox2 {
+  border-radius: 10px;
+  border: 2px solid;
+  /* border-width: 2px; */
+  border-image: linear-gradient(45deg, #ff6ec7, #7367f0) 1;
+  /* box-shadow: 4px 4px 4px 4px rgba(115, 103, 240, 0.6); */
+}
+
+.stretchText {
+  letter-spacing: 5.6px;
+}

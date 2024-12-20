@@ -1,13 +1,15 @@
-import { auth } from '@/auth'
+"use client"
 import React from 'react'
 import  LoginBody from './login-body'
+import { useSession } from 'next-auth/react'
+import Chat from '../chat/page'
 
-const LoginPage = async () => {
-    const session = await auth()
+const LoginPage = () => {
+    const {data: session} = useSession()
 
     if (!session?.user) return <LoginBody />
 
-    return (<div>You are signed in as {session.username}</div>)
+    return (<Chat/>)
 
 }
 

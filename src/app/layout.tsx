@@ -7,6 +7,8 @@ import { ThemeProvider } from "@/components/theme-provider"
 
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,16 +37,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       > 
-        {/* <SessionProvider session={session}> */}
+        <SessionProvider session={session}>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
+            <Navbar/>
             {children}
+            <Footer/>
           </ThemeProvider>
-        {/* </SessionProvider> */}
+        </SessionProvider>
         <Toaster />
       </body>
     </html>
