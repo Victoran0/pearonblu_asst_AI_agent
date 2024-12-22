@@ -14,18 +14,18 @@ def email_category_generator(email: str):
         [
             (
                 "system",
-                "You are an Email Categorization Agent for Pearon Blu Hotel, highly skilled at analyzing customer emails and understanding their intent. Your role is to accurately and effectively categorize emails into meaningful and useful categories based on their content and context."
+                "You are an expert Email Categorization Agent, highly skilled at analyzing customer emails and understanding their intent. Your role is to accurately and effectively categorize emails into meaningful and useful categories based on their content and context."
             ),
-            (
+            (  # be careful, because it may seem off topic and it is not.
                 "human",
                 """
                 Analyze the provided email and categorize it into one of the following categories:
-                chat_history: For emails related to a previous mails sent to you or a previous response sent by you. For example, "can you remember my name", "but did i not tell you I left early", "it was around 6pm on friday".. anything that has to do with an ongoing/past conversation history.
+                chat_history: For emails related to a previous interaction with you or a reply to a question you previously asked the customer. For example, "can you remember my name", "but did i not tell you I left early", "it was around 6pm on friday".. anything that has to do with an ongoing/past conversation history.
                 price_enquiry: For inquiries about pricing.
-                customer_complaint: For complaints regarding how the customerm was treated, our services, or related terms.
+                customer_complaint: For complaints regarding how the customer was treated, our services, or related terms.
                 product_enquiry: For questions about our hotel features, benefits, or services (excluding pricing).
                 customer_feedback: For positive feedback on our hotel's service. For example: I really enjoyed my stay at the hotel!
-                chat_related: For emails related to casual greetings and other straightforward questions/messages not related to customer_feedback, pricing and other options.
+                chat_related: For emails related to casual greetings and other straightforward questions/messages, not related to customer_feedback, pricing and other options.
                 off_topic: For emails unrelated to any of the listed categories.
                 Output a single category from the options (chat_history, price_enquiry, customer_complaint, product_enquiry, customer_feedback, off_topic, chat_related). Your response should follow this format: 'category_name'.
                 User's Email:
@@ -36,7 +36,6 @@ def email_category_generator(email: str):
     )
 
     email_category_generator = prompt | GROQ_LLM | StrOutputParser()
-
     return email_category_generator.invoke({"initial_email": email})
 
 
@@ -61,7 +60,7 @@ def research_router_generator(email: str, email_category: str):
                 - Make your decision using both the `EMAIL` and `EMAIL_CATEGORY`.
 
                 **Output Format: **
-                Return a JSON object with a two key `router_decision` and 'response', and provide no preamble or explanation.
+                Return a JSON object with two keys `router_decision` and 'response', and provide no preamble or explanation.
 
                 **Input Details: **
                 EMAIL: `{email}`
@@ -112,12 +111,12 @@ def draft_writer_generator(initial_email: str, email_category: str, research_inf
         [
             (
                 "system",
-                "You are an expert Email Writer for a company. Your role is to draft thoughtful, friendly, and professional emails in response to customer inquiries. You will use the provided `INITIAL_EMAIL`, the `EMAIL_CATEGORY` labeled by the categorizer agent, and any additional `RESEARCH_INFO` from the research agent to craft the email."
+                "You are an expert Email Writer for Pearon Blu Hotel. Your role is to draft thoughtful, friendly, and professional emails in response to customer emails. You will use the provided `INITIAL_EMAIL`, the `EMAIL_CATEGORY` labeled by the categorizer agent, and any additional `RESEARCH_INFO` from the research agent to craft the email."
 
             ), (
                 "human",
                 """
-                "Based on the given `INITIAL_EMAIL`, `EMAIL_CATEGORY`, and `RESEARCH_INFO`, draft a helpful and professional response email using the following guidelines:  
+                "Based on the given `INITIAL_EMAIL`, `EMAIL_CATEGORY`, and `RESEARCH_INFO`, draft a helpful and professional response using the following guidelines:  
 
                 1. **off_topic:**  
                 - Ask the customer questions to gather more information.  
@@ -202,7 +201,7 @@ def draft_analysis_generator(initial_email: str, email_category: str, research_i
         [
             (
                 "system",
-                "You are the Quality Control Agent of our company. Your role is to evaluate the `INITIAL_EMAIL` from the customer, the `EMAIL_CATEGORY` assigned by the categorizer agent, the `RESEARCH_INFO` from the research agent, and the `DRAFT_EMAIL`. Provide a clear analysis of whether the draft email effectively addresses the customer's issues."
+                "You are the Quality Control Agent of Pearon Blu Hotel. Your role is to evaluate the `INITIAL_EMAIL` from the customer, the `EMAIL_CATEGORY` assigned by the categorizer agent, the `RESEARCH_INFO` from the research agent, and the `DRAFT_EMAIL`. Provide a clear analysis of whether the draft email effectively addresses the customer's issues."
             ), (
                 "human",
                 """ 
@@ -235,7 +234,7 @@ def rewrite_email_generator(initial_email: str, email_category: str, research_in
         [
             (
                 "system",
-                "You are the Final Email Agent. Your task is to rewrite and improve the `DRAFT_EMAIL` based on the `email_analysis` provided by the QC Agent, creating a polished and effective final email."
+                "You are a customer assistant for Pearon Blu Hotel. Your task is to rewrite and improve the `DRAFT_EMAIL` based on the `email_analysis` provided by the QC Agent, creating a polished and effective final email."
             ), (
                 "human",
                 """ 
@@ -244,6 +243,7 @@ def rewrite_email_generator(initial_email: str, email_category: str, research_in
                 1. Use the feedback in `DRAFT_EMAIL_FEEDBACK` to improve the structure, tone, and clarity of the `DRAFT_EMAIL`.  
                 2. Incorporate relevant details from the `RESEARCH_INFO` and `INITIAL_EMAIL` to address the customer's concerns effectively.  
                 3. Ensure the final email is professional, friendly, and concise.  
+                4. Always sign off professionally as `From Sarah, the Resident Manager.` 
 
                 **Key Rules:**  
                 - Do not invent or include information not provided in the `RESEARCH_INFO`, `INITIAL_EMAIL`, or `DRAFT_EMAIL_FEEDBACK`.  
@@ -265,3 +265,11 @@ def rewrite_email_generator(initial_email: str, email_category: str, research_in
     rewrite_email_chain = prompt | GROQ_LLM | JsonOutputParser()
 
     return rewrite_email_chain.invoke({"initial_email": initial_email, "email_category": email_category, "research_info": research_info, "draft_email": draft_email, "email_analysis": email_analysis})
+
+
+def format_chat_history(history: str) -> str:
+    format_history_to_str = ""
+    for i in range(len(history)):
+        # tag = "Customer" if history[i].type == 'human' else 'Pearon Blu Assistant'
+        format_history_to_str += f"{history[i].type}: {history[i].content} \n"
+    return format_history_to_str
