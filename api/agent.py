@@ -7,14 +7,10 @@ from typing_extensions import TypedDict
 from typing import List, Annotated
 from dotenv import load_dotenv
 from .generators import rewrite_email_generator, draft_analysis_generator, draft_writer_generator, email_category_generator, search_keyword_generator, rewrite_router_generator, research_router_generator
-from langchain_groq import ChatGroq
 from langchain_core.messages import AIMessage
 
 
 load_dotenv()
-
-#  LLM
-GROQ_LLM = ChatGroq(model="llama3-70b-8192")
 
 # Tool Setup
 web_search_tool = TavilySearchResults(k=1)

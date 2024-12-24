@@ -1,12 +1,7 @@
 from dotenv import load_dotenv
-from langchain_groq import ChatGroq
+from .llm import GROQ_LLM
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser, JsonOutputParser
-
-
-load_dotenv()
-
-GROQ_LLM = ChatGroq(model="llama3-70b-8192")
 
 
 def format_chat_history(history: list) -> str:
