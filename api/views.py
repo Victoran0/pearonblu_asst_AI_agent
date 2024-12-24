@@ -30,8 +30,8 @@ class LoginViewSet(viewsets.ViewSet):
 
 
 class ChatViewSet(viewsets.ViewSet):
-    # authentication_classes = [JWT]
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def create(self, request):
         if not request.data["body"]:
