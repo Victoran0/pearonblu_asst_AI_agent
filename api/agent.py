@@ -26,19 +26,17 @@ class GraphState(TypedDict):
     Represents the state of our graph.
 
     Attributes:
-        initial_email: customer's email
+        messages: Thread of the ongoing conversation between the Customer and Pearon Blu Assistant
         email_category: email category
         draft_email: LLM generation
-        final_email: LLM generation
         research_info: list of documents
         info_needed: whether to add search info
         num_steps: number of steps
+        draft_email_feedback: feedback on the draft email if it does not fully answer the customer query
     """
-    # initial_email: Annotated[list, add_messages]
-    messages: Annotated[list, add_messages]
+    email_thread: Annotated[list, add_messages]
     email_category: str
     draft_email: str
-    # final_email: Annotated[list, add_messages]
     research_info: List[str]
     info_needed: bool
     num_steps: int
@@ -50,39 +48,38 @@ class GraphState(TypedDict):
 def categorize_email(state):
     """take the initial email and categorize it"""
     # print("---CATEGORIZING INITIAL EMAIL---")
-    initial_email = state['messages']
-    print("The initial email: ", initial_email)
+    email_thread = state['email_thread']
     num_steps = int(state['num_steps'])
     num_steps += 1
 
-    email_category = email_category_generator(initial_email)
+    email_category = email_category_generator(email_thread)
     print(f"-----------The email's category-----------{email_category}")
 
     return {"email_category": email_category, "num_steps": num_steps}
 
 
-def direct_response(state):
-    """take the messages list and reply directly which will trigger agent memory"""
+# def direct_response(state):
+#     """take the messages list and reply directly which will trigger agent memory"""
     # print("---CATEGORIZING INITIAL EMAIL---")
     # initial_email = state['initial_email'][-1]
-    num_steps = int(state['num_steps'])
-    num_steps += 1
+    # num_steps = int(state['num_steps'])
+    # num_steps += 1
 
-    draft_email = GROQ_LLM.invoke(state["messages"]).content
-    print('----------The chat history response:----------', str(draft_email))
-    return {"draft_email": draft_email, "num_steps": num_steps}
+    # draft_email = GROQ_LLM.invoke(state["messages"]).content
+    # print('----------The chat history response:----------', str(draft_email))
+    # return {"draft_email": draft_email, "num_steps": num_steps}
 
 
 def research_info_search(state):
 
     # print("---RESEARCH INFO SEARCHING---")
-    initial_email = state["messages"]
+    email_thread = state["email_thread"]
     email_category = state["email_category"]
     num_steps = state['num_steps']
     num_steps += 1
 
     # Web search
-    keywords = search_keyword_generator(initial_email, email_category)
+    keywords = search_keyword_generator(email_thread, email_category)
     keywords = keywords['keywords']
     # print(keywords)
     full_searches = []
@@ -104,7 +101,7 @@ def research_info_search(state):
 def draft_email_writer(state):
     # print("---DRAFT EMAIL WRITER---")
     # Get the state
-    initial_email = state["messages"]
+    email_thread = state["email_thread"]
     email_category = state["email_category"]
     research_info = state["research_info"]
     num_steps = state['num_steps']
@@ -112,7 +109,7 @@ def draft_email_writer(state):
 
     # Generate draft email
     draft_email = draft_writer_generator(
-        initial_email, email_category, research_info)
+        email_thread, email_category, research_info)
     # print(draft_email)
     # print(type(draft_email))
 
@@ -124,7 +121,7 @@ def draft_email_writer(state):
 def analyze_draft_email(state):
     # print("---DRAFT EMAIL ANALYZER---")
     # Get the state
-    initial_email = state["messages"]
+    email_thread = state["email_thread"]
     email_category = state["email_category"]
     draft_email = state["draft_email"]
     research_info = state["research_info"]
@@ -132,11 +129,8 @@ def analyze_draft_email(state):
     num_steps += 1
 
     # Generate draft email
-    draft_email_feedback = draft_analysis_generator({"initial_email": initial_email,
-                                                     "email_category": email_category,
-                                                     "research_info": research_info,
-                                                     "draft_email": draft_email}
-                                                    )
+    draft_email_feedback = draft_analysis_generator(
+        email_thread, email_category, research_info, draft_email)
     # print(draft_email)
     # print(type(draft_email))
 
@@ -146,7 +140,7 @@ def analyze_draft_email(state):
 def rewrite_email(state):
     # print("---ReWRITE EMAIL ---")
     # Get the state
-    initial_email = state["messages"]
+    email_thread = state["email_thread"]
     email_category = state["email_category"]
     draft_email = state["draft_email"]
     research_info = state["research_info"]
@@ -155,14 +149,10 @@ def rewrite_email(state):
     num_steps += 1
 
     # Generate draft email
-    final_email = rewrite_email_generator({"initial_email": initial_email,
-                                           "email_category": email_category,
-                                           "research_info": research_info,
-                                           "draft_email": draft_email,
-                                           "email_analysis": draft_email_feedback}
-                                          )
+    reply = rewrite_email_generator(
+        email_thread, email_category, research_info, draft_email, draft_email_feedback)
 
-    return {"messages": [AIMessage(content=final_email['final_email'])], "num_steps": num_steps}
+    return {"email_thread": [AIMessage(content=reply['reply_email'])], "num_steps": num_steps}
 
 
 def no_rewrite(state):
@@ -172,7 +162,7 @@ def no_rewrite(state):
     num_steps = state['num_steps']
     num_steps += 1
 
-    return {"messages": [AIMessage(content=draft_email)], "num_steps": num_steps}
+    return {"email_thread": [AIMessage(content=draft_email)], "num_steps": num_steps}
 
 
 # def state_printer(state):
@@ -203,13 +193,13 @@ def route_to_research(state):
     email_category = state["email_category"]
     print("--------------The email category----: ", email_category)
     # Reply directly to trigger the agent memory
-    if email_category == "'chat_history'":
-        print("chat history detected")
-        return "direct_reply"
+    # if email_category in ['chat_history', 'chat_related']:
+    #     print("chat history detected")
+    #     return "direct_reply"
 
-    initial_email = state["messages"]
+    email_thread = state["email_thread"]
 
-    router = research_router_generator(initial_email, email_category)
+    router = research_router_generator(email_thread, email_category)
 
     # print(router)
     # print(type(router))
@@ -226,14 +216,14 @@ def route_to_research(state):
 def route_to_rewrite(state):
 
     # print("---ROUTE TO REWRITE---")
-    initial_email = state["messages"]
+    email_thread = state["email_thread"]
     email_category = state["email_category"]
     draft_email = state["draft_email"]
 
     # draft_email = "Yo we can't help you, best regards Sarah"
 
     router = rewrite_router_generator(
-        initial_email, email_category, draft_email)
+        email_thread, email_category, draft_email)
 
     # print(router)
     # print(router['router_decision'])
@@ -259,7 +249,7 @@ workflow.add_node("draft_email_writer", draft_email_writer)
 workflow.add_node("analyze_draft_email", analyze_draft_email)
 workflow.add_node("rewrite_email", rewrite_email)
 workflow.add_node("no_rewrite", no_rewrite)
-workflow.add_node("direct_response", direct_response)
+# workflow.add_node("direct_response", direct_response)
 
 # Add the edges
 workflow.set_entry_point("categorize_email")
@@ -269,21 +259,10 @@ workflow.add_conditional_edges(
     route_to_research,
     {
         "research_info": "research_info_search",
-        "draft_email": "draft_email_writer",
-        "direct_reply": "direct_response"
+        "draft_email": "draft_email_writer"
     },
 )
 workflow.add_edge("research_info_search", "draft_email_writer")
-# workflow.add_edge("direct_response", "route_to_rewrite")
-
-workflow.add_conditional_edges(
-    "direct_response",
-    route_to_rewrite,
-    {
-        "rewrite": "analyze_draft_email",
-        "no_rewrite": "no_rewrite",
-    },
-)
 
 workflow.add_conditional_edges(
     "draft_email_writer",
@@ -293,13 +272,14 @@ workflow.add_conditional_edges(
         "no_rewrite": "no_rewrite",
     },
 )
+
 workflow.add_edge("analyze_draft_email", "rewrite_email")
 workflow.add_edge("no_rewrite", END)
 workflow.add_edge("rewrite_email", END)
 # workflow.add_edge("state_printer", END)
 
-# Memory saver for checkpointing and saving previous messages for consistent accross the chat
-memory = MemorySaver()  # memory not required for this project
+# Memory saver for checkpointing and saving previous messages, ensuring consistent accross the chat
+memory = MemorySaver()
 
 # Compile
 graph = workflow.compile(checkpointer=memory)
@@ -309,15 +289,16 @@ config = {"configurable": {"thread_id": "1"}}
 def get_agent_response(email: str):
 
     events = graph.stream(
-        {"messages": [("user", email)], "research_info": None, "num_steps": 0},
+        {"email_thread": [("user", email)],
+         "research_info": None, "num_steps": 0},
         config,
         stream_mode="values",
     )
 
     for event in events:
         # print(f"---------{event}")
-        if "messages" in event:
-            response = event["messages"][-1]
+        if "email_thread" in event:
+            response = event["email_thread"][-1]
             # pass
             # event[value][-1].pretty_print()
             # print(f"Finished running: {key}:")
@@ -331,3 +312,6 @@ def get_agent_response(email: str):
         return response.content
     except:
         return ValueError("An error occured while processing the request")
+
+
+# {"body": "Hi, my name is paul, i enjoyed my stay at your hotel"}
