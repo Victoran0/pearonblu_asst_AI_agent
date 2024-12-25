@@ -1,4 +1,5 @@
 from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain_core.messages import AIMessage
 from langchain.schema import Document
 from langgraph.graph import END, StateGraph
 from langgraph.graph.message import add_messages
@@ -7,7 +8,7 @@ from typing_extensions import TypedDict
 from typing import List, Annotated
 from dotenv import load_dotenv
 from .generators import rewrite_email_generator, draft_analysis_generator, draft_writer_generator, email_category_generator, search_keyword_generator, rewrite_router_generator, research_router_generator
-from langchain_core.messages import AIMessage
+from .agentic_rag import query_p_and_s_chroma_db
 
 
 load_dotenv()
@@ -103,9 +104,15 @@ def draft_email_writer(state):
     num_steps = state['num_steps']
     num_steps += 1
 
-    # Generate draft email
-    draft_email = draft_writer_generator(
-        email_thread, email_category, research_info)
+    if email_category in ['price_enquiry', 'product_enquiry']:
+        print("Price or product enquiry detected")
+        document = query_p_and_s_chroma_db(email_thread[-1].content)
+        draft_email = draft_writer_generator(
+            email_thread, email_category, research_info, document)
+    else:
+        # Generate draft email
+        draft_email = draft_writer_generator(
+            email_thread, email_category, research_info)
     # print(draft_email)
     # print(type(draft_email))
 
@@ -295,14 +302,9 @@ def get_agent_response(email: str):
         # print(f"---------{event}")
         if "email_thread" in event:
             response = event["email_thread"][-1]
-            # pass
-            # event[value][-1].pretty_print()
-            # print(f"Finished running: {key}:")
 
     snapshot = graph.get_state(config)
     print(f"The snapshot:----------------------{snapshot}")
-    # print(f"The final response to the email: {snapshot.values['final_email']}")
-    # return snapshot.values['final_email']
     print(f"The response:-----------------------{response}")
     try:
         return response.content
@@ -310,4 +312,4 @@ def get_agent_response(email: str):
         return ValueError("An error occured while processing the request")
 
 
-# {"body": "Hi, my name is paul, i enjoyed my stay at your hotel"}
+# {"body": "how much does the executive room cost"}

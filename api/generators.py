@@ -112,7 +112,7 @@ def search_keyword_generator(email_thread: list, email_category: str):
         {"email": email_thread.split("human")[-1], "email_category": email_category})
 
 
-def draft_writer_generator(email_thread: list, email_category: str, research_info: dict):
+def draft_writer_generator(email_thread: list, email_category: str, research_info: dict, document: str = ""):
     email_thread = format_chat_history(email_thread)
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -146,8 +146,12 @@ def draft_writer_generator(email_thread: list, email_category: str, research_inf
                 7. **chat_history:**
                 - Continue the conversation based on the previous interaction. Look for information in the EMAIL_THREAD, if you need to.
 
+                8. **price_enquiry** or **product_enquiry**:
+                - Provide the requested information from the `PRICES_AND_SERVICES_DOCUMENT` in a clear, friendly, and concise manner.
+
+
                 **Key Rules:**  
-                - Do not fabricate information. Use only the details provided in `RESEARCH_INFO` and `EMAIL_THREAD`.  
+                - Do not fabricate information. Use only the details provided in `RESEARCH_INFO`, `EMAIL_CATEGORY`, `PRICES_AND_SERVICES_DOCUMENT` and `EMAIL_THREAD`.  
                 - Always sign off professionally as `From Sarah, the Resident Manager.`  
 
                 **Output Format:**  
@@ -157,6 +161,7 @@ def draft_writer_generator(email_thread: list, email_category: str, research_inf
                 EMAIL_THREAD: `{email_thread}`  
                 EMAIL_CATEGORY: `{email_category}`  
                 RESEARCH_INFO: `{research_info}`  
+                PRICES_AND_SERVICES_DOCUMENT: `{document}`
                 """
             )
         ]
@@ -165,7 +170,10 @@ def draft_writer_generator(email_thread: list, email_category: str, research_inf
     draft_writer_chain = prompt | GROQ_LLM | JsonOutputParser()
 
     return draft_writer_chain.invoke({"email_thread": email_thread,
-                                      "email_category": email_category, "research_info": research_info})
+                                      "email_category": email_category,
+                                      "research_info": research_info,
+                                      "document": document
+                                      })
 
 
 def rewrite_router_generator(email_thread: list, email_category: str, draft_email: str):
