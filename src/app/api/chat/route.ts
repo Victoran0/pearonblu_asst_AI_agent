@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const session = await auth()
     if (!session?.user) return new Response("Unauthorized", {status: 401})
     
-    // console.log("The full messages: ", messages)
+    console.log("The full messages: ", messages)
     // console.log("The latest prompt: ", latestPrompt)
 
     try {
