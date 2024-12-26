@@ -13,7 +13,10 @@ class EmailThread(models.Model):
 
     class Meta:
         # Ensure customer_name is unique per staff
-        unique_together = ("staff", "customer_name")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["staff", "customer_name"], name="unique_customer_per_staff")
+        ]
 
     def __str__(self):
         return f"Thread with {self.customer_name} by {self.staff.username}"
