@@ -11,5 +11,9 @@ class EmailThread(models.Model):
     customer_name = models.CharField(max_length=255, unique=True)
     last_updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        # Ensure customer_name is unique per staff
+        unique_together = ("staff", "customer_name")
+
     def __str__(self):
         return f"Thread with {self.customer_name} by {self.staff.username}"
