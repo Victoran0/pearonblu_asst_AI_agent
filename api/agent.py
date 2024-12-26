@@ -306,10 +306,8 @@ def get_agent_response(email: str):
     snapshot = graph.get_state(config)
     print(f"The snapshot:----------------------{snapshot}")
     print(f"The response:-----------------------{response}")
-    try:
-        return response.content
-    except:
-        return ValueError("An error occured while processing the request")
+
+    return response.content
 
 
 # {"body": "how much does the executive room cost"}
