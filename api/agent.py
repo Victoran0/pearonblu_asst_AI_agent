@@ -7,6 +7,7 @@ from langgraph.checkpoint.memory import MemorySaver
 from typing_extensions import TypedDict
 from typing import List, Annotated
 from dotenv import load_dotenv
+from uuid import uuid4
 from .generators import rewrite_email_generator, draft_analysis_generator, draft_writer_generator, email_category_generator, search_keyword_generator, rewrite_router_generator, research_router_generator
 from .agentic_rag import query_p_and_s_chroma_db
 
@@ -286,10 +287,15 @@ memory = MemorySaver()
 
 # Compile
 graph = workflow.compile(checkpointer=memory)
-config = {"configurable": {"thread_id": "1"}}
 
 
-def get_agent_response(email: str):
+def get_agent_response(email: str, customer_name: str):
+    """The default chat will have no saved state as it will be initialized with random thread ids"""
+    thread_id = str(
+        uuid4()) if customer_name == "no_history" else customer_name
+    # print("The thread id: ", thread_id, type(thread_id))
+
+    config = {"configurable": {"thread_id": 'thread_id'}}
 
     events = graph.stream(
         {"email_thread": [("user", email)],
@@ -304,10 +310,15 @@ def get_agent_response(email: str):
             response = event["email_thread"][-1]
 
     snapshot = graph.get_state(config)
-    print(f"The snapshot:----------------------{snapshot}")
+    # print(f"The snapshot:----------------------{snapshot}")
     print(f"The response:-----------------------{response}")
-
-    return response.content
+    try:
+        return response.content
+    except Exception as e:
+        # Print the error type and message
+        print(f"An error occurred: {type(e).__name__}")
+        print(f"Error message: {e}")
+        raise e
 
 
 # {"body": "how much does the executive room cost"}
