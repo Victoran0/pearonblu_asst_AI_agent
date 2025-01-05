@@ -11,9 +11,16 @@ import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react"
 import AsstHeader from "@/components/asst-header";
 import { useTheme } from "next-themes";
+import { Messages } from "@/types";
 
 
-const ChatBody = () => {
+type Props = {
+    name?: String
+    chat_history?: Messages
+}
+
+
+const ChatBody = ({name, chat_history}: Props) => {
     const [body, setBody] = useState<string>("")
     const containerRef = useRef<HTMLDivElement | null>(null)
     const [responseLoaded, setResponseLoaded] = useState<boolean>(false)
@@ -75,6 +82,9 @@ const ChatBody = () => {
   return (
     <div className="grid items-center justify-items-center min-h-screen p-2 pb-2 gap-2 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <AsstHeader/>
+      <div className={cn('cursor-pointer text-center bbBox2 px-2 py-1 w-[250px] text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}>
+            {name === undefined ? "General Chat": `${name}'s Chat`}
+      </div>
       <div className="h-4"></div>
 
       <motion.div className='grid w-full max-h-fit mb-16 pl-[55px] items-end py-2 pb-4 rounded-lg bg-gray-200 shadow-inner dark:bg-gray-900'>
