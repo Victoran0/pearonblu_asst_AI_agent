@@ -28,10 +28,22 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex space-x-8  items-center">
             <Link
+              href="/chat"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
+            >
+              Chat
+            </Link>
+            <Link
               href="/chats"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
             >
               Chats
+            </Link>
+            <Link
+              href="/rephrase"
+              className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
+            >
+              Rephrase
             </Link>
             <Link
               href="/update_doc"
@@ -109,10 +121,22 @@ export default function Navbar() {
         <div className="md:hidden">
           <div className="space-y-1 px-4 pb-4">
             <Link
+              href="/chat"
+              className="block text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-2"
+            >
+              Chat
+            </Link>
+            <Link
               href="/chats"
               className="block text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-2"
             >
               Chats
+            </Link>
+            <Link
+              href="/rephrase"
+              className="block text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-2"
+            >
+              Rephrase
             </Link>
             <Link
               href="/update_doc"
