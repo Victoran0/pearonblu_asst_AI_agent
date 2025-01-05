@@ -35,3 +35,8 @@ export interface formData {
   username: string;
   password: string;
 }
+
+export interface Messages {
+  role: String;
+  content: String;
+}
