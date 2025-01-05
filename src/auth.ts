@@ -118,11 +118,13 @@ export async function refreshAccessToken(token: JWT) {
             accessTokenExpires: decoded.exp * 1000 //convert to milliseconds
         };
     } catch (error: any) {
-        console.error("---------Failed to refresh access token: ", error.response?.data || error.detail);
+        console.error("---------Failed to refresh access token: ", error);
+
         if (error.detail === 'Token is invalid or expired') {
             console.log("User logged out from the backend but not on the frontend")
-            await axios.post("/api/signout")
         }
+        
+        await axios.post("/api/signout")
 
         return {
             ...token,
