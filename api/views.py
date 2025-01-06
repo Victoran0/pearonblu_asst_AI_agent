@@ -42,7 +42,7 @@ class ChatViewSet(viewsets.ModelViewSet):
 
         customer_email = request.data["body"]
         # print("The customer email: ", customer_email, type(customer_email))
-        customer_name = request.data.get('name', 'no_history')
+        customer_name = request.data.get('name', 'General')
         # print("the customer name: ", customer_name)
         # customer name can be general for general chats or real customer name for customer specific chats
         # When it is general, the agent thread_id should be random
