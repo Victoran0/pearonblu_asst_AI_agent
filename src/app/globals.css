@@ -301,14 +301,6 @@ body {
   transition: all 0.3s ease;
 }
 
-.google {
-  color: #4285f4;
-}
-
-.office {
-  color: #d83b01;
-}
-
 .terms {
   font-size: 0.8rem;
   color: #888;

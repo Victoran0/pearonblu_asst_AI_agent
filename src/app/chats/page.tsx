@@ -10,9 +10,9 @@ const Chats = () => {
 
   return (
     <>
-    <AddNewChat />
-    <Separator />
-     <PastChats/>
+      <AddNewChat />
+      <Separator />
+      <PastChats />
     </>
   )
 }
