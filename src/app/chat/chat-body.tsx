@@ -14,7 +14,7 @@ import { Messages } from "@/types";
 
 type Props = {
     name?: String
-    chat_history?: Promise<Messages[]> | []
+    chat_history?: Messages[]
 }
 
 // UNCOMMENT USESESSION ONCE DONE TESTING
