@@ -45,7 +45,6 @@ const AddNewChat = () => {
 
   return (
     <>
-    <div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           <div className="flex-shrink-0">
@@ -53,12 +52,9 @@ const AddNewChat = () => {
           </div>
         </div>
       </div>
-    </div>
-      <div className='mx-auto flex justify-between px-4 sm:px-6 lg:px-8'>
-      </div>
-      <div className='grid justify-items-center text-gray-800 dark:text-white'>
-        <div className="h-4"></div>
+      <div className="h-4"></div>
         
+      <div className='grid justify-items-center text-gray-800 dark:text-white'>
         {addNewChatClicked ? (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
@@ -95,8 +91,8 @@ const AddNewChat = () => {
           Add new Chat
         </Button>
         )}
-        <div className="h-4"></div>
       </div>
+      <div className="h-4"></div>
     </>
 
   )
