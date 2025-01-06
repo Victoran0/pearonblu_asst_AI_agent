@@ -5,13 +5,11 @@ import { cn } from "@/lib/utils"; // Optional: Utility function for class manage
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { signOut, useSession } from "next-auth/react";
+import { capitalizeUsername } from "@/app/capitalize";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const {data: session} = useSession()
-  const capitalizeUsername = (username: string): string => {
-    return username.charAt(0).toUpperCase() + username.slice(1)
-  }
 
   return (
     <nav className="bg-white dark:bg-gray-900 shadow-md">
