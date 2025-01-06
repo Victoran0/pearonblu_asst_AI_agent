@@ -46,7 +46,7 @@ export async function GET(req: Request) {
     console.log("The customer name: ", name)
 
     if (name) {
-        console.log("name sent")
+        console.log("name sent, get chat with respect to that name")
         try {
             const response = await axios.get(`${process.env.BASE_URL}/chat/${name}/`, {
                 headers: {
@@ -62,7 +62,7 @@ export async function GET(req: Request) {
             throw error
         }
     } else {
-        console.log("NO name sent")
+        console.log("get all chats")
         try {
             const response = await axios.get(`${process.env.BASE_URL}/chat/`, {
                 headers: {
