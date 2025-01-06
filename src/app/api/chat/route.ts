@@ -15,6 +15,7 @@ export async function POST(req: Request) {
     try {
         const response = await axios.post(`${process.env.BASE_URL}/chat/`, {
             "body": latestPrompt, 
+            "name": name
         }, {
             headers: {
                 Authorization: `Bearer ${session.accessToken}`
