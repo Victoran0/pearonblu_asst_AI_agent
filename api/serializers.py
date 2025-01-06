@@ -61,8 +61,8 @@ class EmailThreadSerializer(serializers.ModelSerializer):
             customer_name=customer_name,
             defaults={"email_thread": ""}
         )
-        thread.email_thread += '{role: "user", content: "' + customer_email + \
-            '"}</eot>{role: "assistant", content: "' + \
+        thread.email_thread += '{"role": "user", "content": "' + customer_email + \
+            '"}</eot>{"role": "assistant", "content": "' + \
             agent_response + '"}</eot>'
         thread.last_updated = now()
         # print("the thread: ", thread.email_thread)
