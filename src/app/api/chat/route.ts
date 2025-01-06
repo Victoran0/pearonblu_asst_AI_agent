@@ -6,10 +6,10 @@ import { auth } from '@/auth'
 export async function POST(req: Request) {
     const session = await auth()
     if (!session?.user) return new Response("Unauthorized", {status: 401})
-    const {messages} = await req.json()
+    const {messages, name} = await req.json()
     const latestPrompt = messages[messages.length - 1].content
     
-    console.log("The full messages: ", messages)
+    console.log("The full messages: ", messages, name)
     console.log("The latest prompt: ", latestPrompt)
 
     try {
@@ -30,6 +30,8 @@ export async function POST(req: Request) {
         console.error("The chat post request failed: ", error)
         throw error
     }
+
+    // return new Response("Get request is done!", {status: 200})
 }
 
 export async function GET(req: Request) {
