@@ -6,8 +6,6 @@ import { Send, SparkleIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import {useChat} from 'ai/react'
 import DOMPurify from 'dompurify'
-import ModeToggle  from "@/components/theme-toggle";
-import { signIn } from "next-auth/react";
 import { useSession } from "next-auth/react"
 import AsstHeader from "@/components/asst-header";
 import { useTheme } from "next-themes";
@@ -16,15 +14,15 @@ import { Messages } from "@/types";
 
 type Props = {
     name?: String
-    chat_history?: Messages
+    chat_history?: Promise<Messages[]> | []
 }
 
-
-const ChatBody = ({name, chat_history}: Props) => {
+// UNCOMMENT USESESSION ONCE DONE TESTING
+const ChatBody = ({name = 'General', chat_history = []}: Props) => {
     const [body, setBody] = useState<string>("")
     const containerRef = useRef<HTMLDivElement | null>(null)
     const [responseLoaded, setResponseLoaded] = useState<boolean>(false)
-    const {data: session, update} = useSession({required: true})
+    // const {data: session, update} = useSession({required: true})
     const {theme} = useTheme()
     const loadingRef = useRef<HTMLDivElement | null>(null)  
 
@@ -32,7 +30,7 @@ const ChatBody = ({name, chat_history}: Props) => {
   const {input, handleInputChange, handleSubmit, messages} = useChat({
         api: '/api/chat', // path to our server route
         body: { // the body of the request
-          body
+          body, name
         },
         onError: (error: any) => {
             toast.error("internal server error")
@@ -82,8 +80,8 @@ const ChatBody = ({name, chat_history}: Props) => {
   return (
     <div className="grid items-center justify-items-center min-h-screen p-2 pb-2 gap-2 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <AsstHeader/>
-      <div className={cn('cursor-pointer text-center bbBox2 px-2 py-1 w-[250px] text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}>
-            {name === undefined ? "General Chat": `${name}'s Chat`}
+      <div className={cn('text-center px-2 py-1 w-[250px] text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200 bbBox2" )}>
+            {name === "General" ? "General Chat": `${name}'s Chat`}
       </div>
       <div className="h-4"></div>
 
@@ -91,7 +89,7 @@ const ChatBody = ({name, chat_history}: Props) => {
 
         {messages.length > 0 && (
         <div className="h-[40vh] overflow-y-scroll w-full flex flex-col gap-2" id='message-container' ref={containerRef}>
-            <AnimatePresence mode='wait'>
+            <AnimatePresence mode='sync'>
                 {messages.map((message, index) => {
                     const uniqueId = `fallback-${index}`
                     return (
