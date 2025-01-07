@@ -40,3 +40,8 @@ export interface Messages {
   role: String;
   content: String;
 }
+
+export interface AllHistory {
+  customer_name: String;
+  last_updated: String;
+}
