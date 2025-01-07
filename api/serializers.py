@@ -67,5 +67,5 @@ class EmailThreadSerializer(serializers.ModelSerializer):
         thread.last_updated = now()
         # print("the thread: ", thread.email_thread)
         thread.save()
-        print("thread updated and saved to database")
+        # print("thread updated and saved to database")
         return thread

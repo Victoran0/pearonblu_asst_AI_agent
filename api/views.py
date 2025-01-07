@@ -90,8 +90,8 @@ class ChatViewSet(viewsets.ModelViewSet):
         try:
             email_thread = self.get_queryset().get(customer_name=customer_name)
             serializer = self.get_serializer(email_thread)
-            print("Retrieve the chat of " +
-                  customer_name + ": ", serializer.data)
+            # print("Retrieve the chat of " +
+            #       customer_name + ": ", serializer.data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return Response({"detail": "Email thread not found"}, status=status.HTTP_400_BAD_REQUEST)
