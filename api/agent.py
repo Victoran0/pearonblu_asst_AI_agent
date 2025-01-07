@@ -293,7 +293,7 @@ def get_agent_response(email: str, customer_name: str):
     """The default chat will have no saved state as it will be initialized with random thread ids"""
     thread_id = str(
         uuid4()) if customer_name == "General" else customer_name
-    # print("The thread id: ", thread_id)
+    print("The thread id: ", thread_id)
 
     config = {"configurable": {"thread_id": thread_id}}
 
