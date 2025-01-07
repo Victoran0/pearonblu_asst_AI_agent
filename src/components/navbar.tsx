@@ -82,7 +82,7 @@ export default function Navbar() {
               className="inline-flex items-center justify-center p-2 rounded-md text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none"
             >
               <svg
-                className={cn("h-6 w-6", { hidden: isOpen })}
+                className={cn("h-6 w-6 bbBox2", { hidden: isOpen })}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -96,7 +96,7 @@ export default function Navbar() {
                 />
               </svg>
               <svg
-                className={cn("h-6 w-6", { hidden: !isOpen })}
+                className={cn("h-6 w-6 bbBox2", { hidden: !isOpen })}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
