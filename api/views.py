@@ -98,10 +98,10 @@ class ChatViewSet(viewsets.ModelViewSet):
 
 
 class PandSDocumentViewSet(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     queryset = PandSDocument.objects.all()
     serializer_class = PandSDocumentSerializer
 
     def get_object(self):
-        document, created = PandSDocument.objects.get_or_create()
+        document, _ = PandSDocument.objects.get_or_create()
         return document
