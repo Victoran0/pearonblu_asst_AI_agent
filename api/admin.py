@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import EmailThread
+from .models import EmailThread, PandSDocument
 
 # Register your models here.
 
@@ -10,3 +10,8 @@ class EmailThreadAdmin(admin.ModelAdmin):
     list_display = ('staff', 'customer_name', 'last_updated')
     search_fields = ('customer_name',)  # Allow searching by customer name
     list_filter = ('last_updated',)
+
+
+@admin.register(PandSDocument)
+class PandSDocumentAdmin(admin.ModelAdmin):
+    list_display = ("document",)
