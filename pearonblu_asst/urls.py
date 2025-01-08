@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from api.views import ChatViewSet, LoginViewSet
+from api.views import ChatViewSet, LoginViewSet, PandSDocumentViewSet
 from rest_framework import routers
 from rest_framework_simplejwt import views as jwt_views
 
@@ -24,6 +24,7 @@ router = routers.DefaultRouter()
 
 router.register(r'chat', ChatViewSet, basename='chat')
 router.register(r'login', LoginViewSet, basename='login')
+router.register(r'doc', PandSDocumentViewSet, basename='doc')
 
 
 urlpatterns = [
