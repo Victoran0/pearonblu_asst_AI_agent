@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import EmailThread
-from .serializers import LoginSerializer, EmailThreadSerializer
+from .models import EmailThread, PandSDocument
+from .serializers import LoginSerializer, EmailThreadSerializer, PandSDocumentSerializer
 from .agent import get_agent_response
 import json
 
@@ -95,3 +95,13 @@ class ChatViewSet(viewsets.ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except:
             return Response({"detail": "Email thread not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PandSDocumentViewSet(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
+    queryset = PandSDocument.objects.all()
+    serializer_class = PandSDocumentSerializer
+
+    def get_object(self):
+        document, created = PandSDocument.objects.get_or_create()
+        return document
