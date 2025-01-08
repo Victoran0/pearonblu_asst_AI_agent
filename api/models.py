@@ -25,3 +25,14 @@ class EmailThread(models.Model):
 class PandSDocument(models.Model):
     document = models.TextField()
     last_updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # Ensure only one instance of PandSDocument exists
+        if not PandSDocument.objects.exists() or self.pk:
+            super().save(*args, **kwargs)
+        else:
+            raise Exception(
+                "Only one price and services document instance is allowed.")
+
+    def __str__(self):
+        return f"Price and Services document. Last Updated at {self.last_updated}"
