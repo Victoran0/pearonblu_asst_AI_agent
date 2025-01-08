@@ -6,7 +6,6 @@ import { Send, SparkleIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import {useChat} from 'ai/react'
 import DOMPurify from 'dompurify'
-import { useSession } from "next-auth/react"
 import AsstHeader from "@/components/asst-header";
 import { useTheme } from "next-themes";
 import { Messages } from "@/types";
@@ -17,12 +16,10 @@ type Props = {
     chat_history?: Messages[]
 }
 
-// UNCOMMENT USESESSION ONCE DONE TESTING
 const ChatBody = ({name = 'General', chat_history = []}: Props) => {
     const [body, setBody] = useState<string>("")
     const containerRef = useRef<HTMLDivElement | null>(null)
     const [responseLoaded, setResponseLoaded] = useState<boolean>(false)
-    // const {data: session, update} = useSession({required: true})
     const {theme} = useTheme()
     const loadingRef = useRef<HTMLDivElement | null>(null)  
 
@@ -47,7 +44,7 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
                 loadingRef.current.remove()
             }
         },
-        initialMessages: [],
+        initialMessages: chat_history,
         streamProtocol: 'text'
     });
 
@@ -132,15 +129,15 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
                                 duration: 0.2
                             }}
                         >
-                            {!responseLoaded && (
-                            <div className="col-3">
-                                <div className="snippet" data-title="dot-pulse">
-                                <div className="stage">
-                                    <div className="dot-pulse"></div>
+                            {(!responseLoaded && messages[messages.length-1].role === 'user') && (
+                                <div className="col-3">
+                                    <div className="snippet" data-title="dot-pulse">
+                                    <div className="stage">
+                                        <div className="dot-pulse"></div>
+                                    </div>
+                                    </div>
                                 </div>
-                                </div>
-                            </div>
-                        )}
+                            )}
                         </motion.div>
                         ): ""}
                         </React.Fragment>

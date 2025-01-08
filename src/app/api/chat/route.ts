@@ -1,6 +1,7 @@
 "use server"
 import axios from 'axios'
 import { auth } from '@/auth'
+import { AllHistory } from '@/types'
 
 
 export async function POST(req: Request) {
@@ -55,7 +56,7 @@ export async function GET(req: Request) {
             })
             const data = await response.data
             console.log("chats with respect to the specified name: ", data)
-            return new Response(data, {status: 200})
+            return new Response(JSON.stringify(data), {status: 200})
             
         } catch (error) {
             console.log(error)
@@ -69,9 +70,11 @@ export async function GET(req: Request) {
                     Authorization: `Bearer ${session.accessToken}`
                 }
             })
-            const data = await response.data
+            const data: AllHistory[] = await response.data
+            data.sort((a, b) => new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime())
+
             console.log("PRevious chats: ", data)
-            return new Response(data, {status: 200})
+            return new Response(JSON.stringify(data), {status: 200})
 
         } catch (error) {
             console.log(error)

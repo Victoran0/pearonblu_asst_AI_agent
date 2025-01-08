@@ -6,13 +6,15 @@ import { useSession } from 'next-auth/react'
 import { Separator } from '@/components/ui/separator'
 
 const Chats = () => {
-  // const {data: session} = useSession({required: true})
+  const {data: session} = useSession({required: true})
 
   return (
     <>
       <AddNewChat />
       <Separator />
       <PastChats />
+      <Separator />
+      <div className="h-[280px]"></div>
     </>
   )
 }

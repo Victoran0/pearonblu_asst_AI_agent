@@ -40,7 +40,7 @@ const AddNewChat = () => {
       setShowError(true)
       return
     }
-    router.push(`/chats/${data.username}`)
+    router.push(`/chats/${data.username}?new=true`)
   }
 
   return (

@@ -39,9 +39,10 @@ export interface formData {
 export interface Messages {
   role: String;
   content: String;
+  id?: string;
 }
 
 export interface AllHistory {
-  customer_name: String;
-  last_updated: String;
+  customer_name: string;
+  last_updated: string;
 }

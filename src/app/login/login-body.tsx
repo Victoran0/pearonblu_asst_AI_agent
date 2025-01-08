@@ -125,7 +125,7 @@ const LoginBody = () => {
                     <p className='terms'>
                         By continuing you agree to Pearon Blu's <a href="#">Terms & Conditions</a>
                     </p>
-                    <p className="footer">© 2024 Pearon Blu. All rights reserved.</p>
+                    <p className="footer">© {new Date().getFullYear()} Pearon Blu. All rights reserved.</p>
                 </div>
                 <div className="h-10"></div>
             </main>
