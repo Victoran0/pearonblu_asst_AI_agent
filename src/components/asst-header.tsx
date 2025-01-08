@@ -9,9 +9,7 @@ const AsstHeader = () => {
 
     return (
         <div className={cn("flex w-fit items-center colorGradText", theme === "light"?"bdBox":"")}>
-            <Link href="/chat">
-                <h1 className="pl-5 text-2xl py-2" >Pearon Blu Assistant</h1>
-            </Link>
+            <h1 className="pl-5 text-2xl py-2 cursor-pointer" >Pearon Blu Assistant</h1>
             <div className="w-8"></div>
             <div className="pr-2">
                 <ModeToggle />
