@@ -20,7 +20,7 @@ export default function Navbar() {
             <Link href="/" className="text-xl font-bold colorGradText text-gray-800 dark:text-white">
               Pearon Blu
             </Link>
-            {session?.username ? (<span className="pl-10 text-stone-500">Welcome {capitalizeUsername(session.username)}!</span>) : " "}
+            {session?.username ? (<span className="pl-7 text-stone-500">Welcome {capitalizeUsername(session.username)}!</span>) : " "}
           </div>
 
           {/* Desktop Navigation */}
