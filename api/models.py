@@ -20,3 +20,8 @@ class EmailThread(models.Model):
 
     def __str__(self):
         return f"Thread with {self.customer_name} by {self.staff.username}"
+
+
+class PandSDocument(models.Model):
+    document = models.TextField()
+    last_updated = models.DateTimeField(auto_now=True)
