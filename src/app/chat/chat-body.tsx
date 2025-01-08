@@ -75,14 +75,14 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
 
 
   return (
-    <div className="grid items-center justify-items-center min-h-screen p-2 pb-2 gap-2 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="grid items-center justify-items-center min-h-screen p-2 pb-2 gap-2 sm:p-2 font-[family-name:var(--font-geist-sans)]">
       <AsstHeader/>
-      <div className={cn('text-center px-2 py-1 w-[250px] text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200 bbBox2" )}>
+      <div className={cn('max-[700px]:text-sm text-center px-2 py-1 w-[250px] text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200 bbBox2" )}>
             {name === "General" ? "General Chat": `${name}'s Chat`}
       </div>
       <div className="h-4"></div>
 
-      <motion.div className='grid w-full max-h-fit mb-16 pl-[55px] items-end py-2 pb-4 rounded-lg bg-gray-200 shadow-inner dark:bg-gray-900'>
+      <motion.div className='max-[700px]:p-2 grid w-full max-h-fit mb-16 pl-[55px] items-end py-2 pb-4 rounded-lg bg-gray-200 shadow-inner dark:bg-gray-900'>
 
         {messages.length > 0 && (
         <div className="h-[40vh] overflow-y-scroll w-full flex flex-col gap-2" id='message-container' ref={containerRef}>
@@ -94,9 +94,9 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
                         <motion.div 
                             key={`${uniqueId}-head`}
                             layout='position' // only its position will animate
-                            className={cn('z-10 mt-2 mr-4 max-w-[700px] break-words rounded-2xl bg-pink-200 dark:bg-gray-800', 
-                            {'self-end text-gray-900 dark:text-gray-100': message.role === 'user', 
-                            'self-start bg-blue-500 text-white': message.role === 'assistant'
+                            className={cn('z-10 mt-2 mr-4 max-w-[700px] break-words rounded-2xl bg-pink-200', 
+                            {'self-end text-gray-900 dark:bg-[#702872] dark:text-gray-100': message.role === 'user', 
+                            'self-start bg-blue-500 dark:bg-gray-900 text-white': message.role === 'assistant'
                             })}
                             layoutId={`container-[${messages.length-1}]`}
                             transition={{
@@ -105,12 +105,12 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
                             }}
                         >   
                             {message.role === 'user' ? (
-                                <div className='px-3 py-2 text-[18px] leading-[20px]'>
+                                <div className='max-[700px]:text-sm px-3 py-2 text-[18px] leading-[20px]'>
                                     {message.content}
                                 </div>
                             ) : (
                                 <div 
-                                    className='px-3 py-2 text-[18px] leading-[20px]'
+                                    className='max-[700px]:text-sm px-3 py-2 text-[18px] leading-[20px]'
                                     dangerouslySetInnerHTML={{
                                         __html: DOMPurify.sanitize(formattedResponse(message.content) ?? "",
                                         {USE_PROFILES: {html: true}})
@@ -150,19 +150,19 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
         {messages.length > 0 && <div className='h-4'/>}
         
         <div>
-            {messages.length === 0 && <div className='mb-4 h-[40vh] flex items-center flex-col gap-10'>
+            {messages.length === 0 && <div className='max-[700px]:h-[400px] mb-4 h-[40vh] flex items-center flex-col gap-10'>
                 <div className="pt-10 flex items-center gap-4">
                     <SparkleIcon className='size-12 text-gray-600' />
                     <div className="flex items-start flex-col gap-2">
-                        <p className="text-gray-950 bgColorGrad text-2xl dark:text-gray-100">Let Pearon Blu assistant reply emails professionally</p>
-                        <p className="text-gray-500 text-2xl px-2 dark:text-gray-400 stretchText mt-2">Get response for customers' emails</p>
+                        <p className="max-[700px]:text-sm text-gray-950 bgColorGrad text-2xl dark:text-gray-100">Let Pearon Blu assistant reply emails professionally</p>
+                        <p className="max-[700px]:text-sm text-gray-500 text-2xl px-2 dark:text-gray-400 stretchText mt-2">Get response for customers' emails</p>
                     </div>
                 </div>
 
                 <div className="h-2"></div>
                 <div className="pl-3 flex items-center gap-2 flex-wrap">
                     <span 
-                    className={cn('cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
+                    className={cn('max-[700px]:text-sm cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
                     onClick={() => {
                         handleInputChange({target: {value: "I really enjoyed my stay at your hotel!, Thanks."}})
                     }}
@@ -170,7 +170,7 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
                         I really enjoyed my stay at your hotel!, Thanks.
                     </span>
                     <span 
-                    className={cn('cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
+                    className={cn('max-[700px]:text-sm cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
                     onClick={() => {
                         handleInputChange({target: {value: "Is there any executive room available?"}})
                     }}
@@ -178,7 +178,7 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
                         Is there any executive room available?
                     </span>
                     <span 
-                    className={cn('cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
+                    className={cn('max-[700px]:text-sm cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
                     onClick={() => {
                         handleInputChange({target: {value: "What time do i get my breakfast?"}})
                     }}
@@ -186,7 +186,7 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
                         What time do i get my breakfast?
                     </span>
                     <span 
-                    className={cn('cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
+                    className={cn('max-[700px]:text-sm cursor-pointer bbBox2 px-2 py-1 text-xl', theme === 'light' ? 'text-gray-600' : "text-gray-200" )}
                     onClick={() => {
                         handleInputChange({target: {value: "I hated my stay at your hotel! you guys suck!!!"}})
                     }}
@@ -195,9 +195,9 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
                     </span>
                 </div>
             </div>}
-            <form className='flex' onSubmit={handleFormSubmit} >
+            <form className='flex max-[700px]:ml-5' onSubmit={handleFormSubmit} >
                 <input 
-                    type="text" className='py-1 w-full relative h-16 placeholder:text-[20px] flex-grow rounded-full border border-gray-200 bg-white pl-6 pr-24 text-[20px] outline-none placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-blue-500/20 focus-visible:ring-offset-1
+                    type="text" className='max-[700px]:text-sm max-[700px]:placeholder:text-[13px] max-[700px]:h-8 max-[700px]:pl-3 max-[700px]:pr-[30px] py-1 w-full relative h-16 placeholder:text-[20px] flex-grow rounded-full border border-gray-200 bg-white pl-6 pr-24 text-[20px] outline-none placeholder:text-gray-400 focus-visible:ring-0 focus-visible:ring-blue-500/20 focus-visible:ring-offset-1
                     dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder-gray-400 dark:focus-visible:ring-blue-500/20 dark:focus-visible:ring-offset-1 dark:focus-visible:ring-offset-gray-700'
                     placeholder="Customer's email"
                     value={input}
@@ -221,8 +221,8 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
                     </div>
                 </motion.div>
                 
-                <button title='send' type="submit" className='relative right-[68px] top-1 ml-2 flex size-14 items-center justify-center rounded-full bg-gray-200 dark:border-y-gray-800 dark:bg-gray-600'>
-                    <Send className='size-6 text-gray-500 dark:text-gray-300' />
+                <button title='send' type="submit" className='max-[700px]:size-7 max-[700px]:right-[35.5px] max-[700px]:top-[2px] relative right-[68px] top-1 ml-2 flex size-14 items-center justify-center rounded-full bg-gray-200 dark:border-y-gray-800 dark:bg-gray-600'>
+                    <Send className='max-[700px]:size-2 size-6 text-gray-500 dark:text-gray-300' />
                 </button>
             </form>
         </div>

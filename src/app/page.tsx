@@ -15,7 +15,9 @@ export default function Home() {
     <div className="grid w-full grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <AsstHeader />
       <Link href="/chat">
-        <h1 className="text-8xl text-zinc-900 colorGradText">Continue to Chat</h1>
+        <h1 className="max-[700px]:text-4xl lg:text-8xl sm:text-6xl text-zinc-900 colorGradText">
+          Continue to Chat
+        </h1>
       </Link>
 
       <div className="fixed bottom-5 right-5">
