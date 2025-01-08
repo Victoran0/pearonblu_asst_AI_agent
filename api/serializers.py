@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth import authenticate, password_validation
 from django.utils.timezone import now
-from .models import EmailThread
+from .models import EmailThread, PandSDocument
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -69,3 +69,10 @@ class EmailThreadSerializer(serializers.ModelSerializer):
         thread.save()
         # print("thread updated and saved to database")
         return thread
+
+
+class PandSDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PandSDocument
+        fields = ['id', 'document']
+        read_only_fields = ['last_updated']
