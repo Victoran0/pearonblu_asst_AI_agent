@@ -56,18 +56,6 @@ def categorize_email(state):
     return {"email_category": email_category, "num_steps": num_steps}
 
 
-# def direct_response(state):
-#     """take the messages list and reply directly which will trigger agent memory"""
-    # print("---CATEGORIZING INITIAL EMAIL---")
-    # initial_email = state['initial_email'][-1]
-    # num_steps = int(state['num_steps'])
-    # num_steps += 1
-
-    # draft_email = GROQ_LLM.invoke(state["messages"]).content
-    # print('----------The chat history response:----------', str(draft_email))
-    # return {"draft_email": draft_email, "num_steps": num_steps}
-
-
 def research_info_search(state):
 
     # print("---RESEARCH INFO SEARCHING---")
@@ -293,7 +281,7 @@ def get_agent_response(email: str, customer_name: str):
     """The default chat will have no saved state as it will be initialized with random thread ids"""
     thread_id = str(
         uuid4()) if customer_name == "General" else customer_name
-    print("The thread id: ", thread_id)
+    # print("The thread id: ", thread_id)
 
     config = {"configurable": {"thread_id": thread_id}}
 
@@ -311,7 +299,7 @@ def get_agent_response(email: str, customer_name: str):
 
     snapshot = graph.get_state(config)
     # print(f"The snapshot:----------------------{snapshot}")
-    print(f"The response:-----------------------{response}")
+    # print(f"The response:-----------------------{response}")
     try:
         return response.content
     except Exception as e:
