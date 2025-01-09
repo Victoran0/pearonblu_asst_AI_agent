@@ -3,7 +3,7 @@ import React, { useEffect, useState, useLayoutEffect } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import ChatBody from '@/app/chat/chat-body'
-import { capitalizeUsername } from '@/app/capitalize'
+import { capitalizeUsername } from '@/app/utils'
 import axios from 'axios'
 import { Messages } from '@/types'
 
