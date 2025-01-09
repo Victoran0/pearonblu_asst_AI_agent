@@ -10,8 +10,8 @@ export async function POST(req: Request) {
     const {messages, name} = await req.json()
     const latestPrompt = messages[messages.length - 1].content
     
-    console.log("The full messages: ", messages, name)
-    console.log("The latest prompt: ", latestPrompt)
+    // console.log("The full messages: ", messages, name)
+    // console.log("The latest prompt: ", latestPrompt)
 
     try {
         const response = await axios.post(`${process.env.BASE_URL}/chat/`, {
@@ -24,16 +24,14 @@ export async function POST(req: Request) {
         }) 
         // console.log(response)
         const data = await response.data
-        console.log("The chat api response: ", data)
+        // console.log("The chat api response: ", data)
         
         return new Response(data, {status: 200})
         
     } catch (error) {
         console.error("The chat post request failed: ", error)
-        throw error
+        return new Response(JSON.stringify(error), {status: 400})
     }
-
-    // return new Response("Get request is done!", {status: 200})
 }
 
 export async function GET(req: Request) {
@@ -44,10 +42,10 @@ export async function GET(req: Request) {
     const {searchParams} = new URL(req.url)
     const name = searchParams?.get('name')
 
-    console.log("The customer name: ", name)
+    // console.log("The customer name: ", name)
 
     if (name) {
-        console.log("name sent, get chat with respect to that name")
+        // console.log("name sent, get chat with respect to that name")
         try {
             const response = await axios.get(`${process.env.BASE_URL}/chat/${name}/`, {
                 headers: {
@@ -55,15 +53,15 @@ export async function GET(req: Request) {
                 }
             })
             const data = await response.data
-            console.log("chats with respect to the specified name: ", data)
+            // console.log("chats with respect to the specified name: ", data)
             return new Response(JSON.stringify(data), {status: 200})
             
         } catch (error) {
-            console.log(error)
-            throw error
+            console.error(error)
+            return new Response(JSON.stringify(error), {status: 400})
         }
     } else {
-        console.log("get all chats")
+        // console.log("get all chats")
         try {
             const response = await axios.get(`${process.env.BASE_URL}/chat/`, {
                 headers: {
@@ -73,14 +71,12 @@ export async function GET(req: Request) {
             const data: AllHistory[] = await response.data
             data.sort((a, b) => new Date(b.last_updated).getTime() - new Date(a.last_updated).getTime())
 
-            console.log("PRevious chats: ", data)
+            // console.log("PRevious chats: ", data)
             return new Response(JSON.stringify(data), {status: 200})
 
         } catch (error) {
-            console.log(error)
-            throw error
+            console.error(error)
+            return new Response(JSON.stringify(error), {status: 400})
         }
     }
-
-    // return new Response("Get request is done!", {status: 200})
 }
