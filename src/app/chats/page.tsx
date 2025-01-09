@@ -10,6 +10,8 @@ const Chats = () => {
 
   return (
     <>
+      <div className="h-10"></div>
+      <Separator />
       <AddNewChat />
       <Separator />
       <PastChats />
