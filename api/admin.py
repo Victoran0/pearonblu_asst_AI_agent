@@ -18,5 +18,5 @@ class PandSDocumentAdmin(admin.ModelAdmin):
 
 
 @admin.register(RephraseHistory)
-class PandSDocumentAdmin(admin.ModelAdmin):
+class RephraseHistoryAdmin(admin.ModelAdmin):
     list_display = ("history",)
