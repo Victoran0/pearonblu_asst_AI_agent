@@ -25,6 +25,7 @@ class EmailThread(models.Model):
 class PandSDocument(models.Model):
     document = models.TextField()
     last_updated = models.DateTimeField(auto_now=True)
+    last_upserted = models.CharField(blank=True, max_length=255)
 
     def save(self, *args, **kwargs):
         # Ensure only one instance of PandSDocument exists
