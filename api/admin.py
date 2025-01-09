@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import EmailThread, PandSDocument
+from .models import EmailThread, PandSDocument, RephraseHistory
 
 # Register your models here.
 
@@ -15,3 +15,8 @@ class EmailThreadAdmin(admin.ModelAdmin):
 @admin.register(PandSDocument)
 class PandSDocumentAdmin(admin.ModelAdmin):
     list_display = ("document",)
+
+
+@admin.register(RephraseHistory)
+class PandSDocumentAdmin(admin.ModelAdmin):
+    list_display = ("history",)
