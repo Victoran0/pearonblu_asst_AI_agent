@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils"; // Optional: Utility function for class manage
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { signOut, useSession } from "next-auth/react";
-import { capitalizeUsername } from "@/app/capitalize";
+import { capitalizeUsername } from "@/app/utils";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,10 +44,10 @@ export default function Navbar() {
               Rephrase
             </Link>
             <Link
-              href="/update_doc"
+              href="/doc"
               className="text-gray-600 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400"
             >
-              Update Doc
+              Doc
             </Link>
             <Link
               href="/help"
@@ -137,10 +137,10 @@ export default function Navbar() {
               Rephrase
             </Link>
             <Link
-              href="/update_doc"
+              href="/doc"
               className="block text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-2"
             >
-              Update Doc
+              Doc
             </Link>
             <Link
               href="/help"
