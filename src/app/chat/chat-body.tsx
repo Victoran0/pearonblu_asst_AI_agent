@@ -9,6 +9,7 @@ import DOMPurify from 'dompurify'
 import AsstHeader from "@/components/asst-header";
 import { useTheme } from "next-themes";
 import { Messages } from "@/types";
+import { formattedResponse } from "../utils";
 
 
 type Props = {
@@ -59,18 +60,6 @@ const ChatBody = ({name = 'General', chat_history = []}: Props) => {
         handleSubmit(event)
         if (responseLoaded) setResponseLoaded(false)
         console.log("submitted")
-    }
-
-    const formattedResponse = (text: string): string => {
-        // because html does not automatically intrepet \n as line or paragraph spacing we use this function
-        const formattedText = text.split('\n\n').map((paragraph) => // split the text by \n\n to get paragraphs
-            paragraph.split("\n") // split each paragraphs by \n to get each line
-            .map(line => line.trim()) // remove whitespaces on either end of the lines
-            .join('<br />') // join the splitted line of each paragraphs by html line breaks
-        )
-        .map(paragraph => `<p>${paragraph}</p>`) // transform each splitted paragraph into html paragraphs
-        .join("") // join then to form html paragraphed and line breaks texts
-        return formattedText 
     }
 
 
