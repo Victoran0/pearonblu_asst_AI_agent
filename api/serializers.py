@@ -85,17 +85,15 @@ class RephraseHistorySerializer(serializers.ModelSerializer):
         read_only_fields = ['last_updated']
 
     def update_history(self, staff, rephrase_req, agent_response):
-        """Concatenate customer' email and agent response to email_thread"""
-        thread, _ = EmailThread.objects.get_or_create(
+        """Concatenate rephrase request and agent response to history"""
+        rephrase_history, _ = RephraseHistory.objects.get_or_create(
             staff=staff,
-            customer_name=customer_name,
-            defaults={"email_thread": ""}
+            defaults={"history": ""}
         )
-        thread.email_thread += '{"role": "user", "content": "' + customer_email + \
+        rephrase_history.history += '{"role": "user", "content": "' + rephrase_req + \
             '"}</eot>{"role": "assistant", "content": "' + \
             agent_response + '"}</eot>'
-        thread.last_updated = now()
-        # print("the thread: ", thread.email_thread)
-        thread.save()
-        # print("thread updated and saved to database")
-        return thread
+        print("the rephrase_history: ", rephrase_history.history)
+        rephrase_history.save()
+        print("rephrase_history updated and saved to database")
+        return rephrase_history
