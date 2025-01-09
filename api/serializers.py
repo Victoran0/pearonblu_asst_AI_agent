@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from django.contrib.auth import authenticate, password_validation
 from django.utils.timezone import now
-from .models import EmailThread, PandSDocument
+from .models import EmailThread, PandSDocument, RephraseHistory
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -76,3 +76,26 @@ class PandSDocumentSerializer(serializers.ModelSerializer):
         model = PandSDocument
         fields = ['id', 'document']
         read_only_fields = ['last_updated']
+
+
+class RephraseHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RephraseHistory
+        fields = ['id', 'history']
+        read_only_fields = ['last_updated']
+
+    def update_history(self, staff, rephrase_req, agent_response):
+        """Concatenate customer' email and agent response to email_thread"""
+        thread, _ = EmailThread.objects.get_or_create(
+            staff=staff,
+            customer_name=customer_name,
+            defaults={"email_thread": ""}
+        )
+        thread.email_thread += '{"role": "user", "content": "' + customer_email + \
+            '"}</eot>{"role": "assistant", "content": "' + \
+            agent_response + '"}</eot>'
+        thread.last_updated = now()
+        # print("the thread: ", thread.email_thread)
+        thread.save()
+        # print("thread updated and saved to database")
+        return thread

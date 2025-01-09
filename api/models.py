@@ -40,6 +40,8 @@ class PandSDocument(models.Model):
 
 
 class RephraseHistory(models.Model):
+    staff = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="rephrase_history", default=1)
     history = models.TextField()
     last_updated = models.DateTimeField(auto_now=True)
 
