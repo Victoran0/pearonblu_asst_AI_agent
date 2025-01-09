@@ -1,11 +1,14 @@
 from django.shortcuts import render
+
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
+
 from .models import EmailThread, PandSDocument
 from .serializers import LoginSerializer, EmailThreadSerializer, PandSDocumentSerializer
 from .agent import get_agent_response
+
 import json
 
 # Create your views here.
@@ -41,12 +44,9 @@ class ChatViewSet(viewsets.ModelViewSet):
             return Response({"response": "request must have the body key and value"}, status=status.HTTP_400_BAD_REQUEST)
 
         customer_email = request.data["body"]
-        print("The customer email: ", customer_email, type(customer_email))
+        # print("The customer email: ", customer_email, type(customer_email))
         customer_name = request.data.get('name', 'General')
-        print("the customer name: ", customer_name)
-        # customer name can be general for general chats or real customer name for customer specific chats
-        # When it is general, the agent thread_id should be random
-        # when it is for a specific customer, the agent thread_id should be the name of the customer
+        # print("the customer name: ", customer_name)
 
         try:
             agent_response = get_agent_response(
