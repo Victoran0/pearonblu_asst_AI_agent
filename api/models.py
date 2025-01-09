@@ -37,3 +37,19 @@ class PandSDocument(models.Model):
 
     def __str__(self):
         return f"Price and Services document. Last Updated at {self.last_updated}"
+
+
+class RephraseHistory(models.Model):
+    history = models.TextField()
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # Ensure only one instance of rephrase history exists
+        if not RephraseHistory.objects.exists() or self.pk:
+            super().save(*args, **kwargs)
+        else:
+            raise Exception(
+                "Only one rephrase history instance is allowed.")
+
+    def __str__(self):
+        return f"Rephrase requests history.. Last Updated at {self.last_updated}"
