@@ -40,18 +40,13 @@ class PandSDocument(models.Model):
 
 
 class RephraseHistory(models.Model):
-    staff = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="rephrase_history", default=1)
-    history = models.TextField()
+    staff = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="rephrase_history", unique=True)
+    history = models.TextField(default="")
     last_updated = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        # Ensure only one instance of rephrase history exists
-        if not RephraseHistory.objects.exists() or self.pk:
-            super().save(*args, **kwargs)
-        else:
-            raise Exception(
-                "Only one rephrase history instance is allowed.")
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Rephrase requests history.. Last Updated at {self.last_updated}"
+        return f"Rephrase history for {self.staff.username} (Last Updated: {self.last_updated})"
