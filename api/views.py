@@ -5,11 +5,10 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import EmailThread, PandSDocument
-from .serializers import LoginSerializer, EmailThreadSerializer, PandSDocumentSerializer
+from .models import EmailThread, PandSDocument, RephraseHistory
+from .serializers import LoginSerializer, EmailThreadSerializer, PandSDocumentSerializer, RephraseHistorySerializer
 from .agent import get_agent_response
-
-import json
+from .rephrase import rephrase_writer
 
 # Create your views here.
 
@@ -105,3 +104,44 @@ class PandSDocumentViewSet(viewsets.ModelViewSet):
     def get_object(self):
         document, _ = PandSDocument.objects.get_or_create()
         return document
+
+
+class RephraseHistoryViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = RephraseHistory.objects.all()
+    serializer_class = RephraseHistorySerializer
+
+    def create(self, request):
+        """Handle new emails from customers and generate a response"""
+        if not request.data["body"]:
+            return Response({"response": "request must have the body key and value"}, status=status.HTTP_400_BAD_REQUEST)
+
+        rephrase_req = request.data["body"]
+
+        try:
+            rephrase_response = rephrase_writer(rephrase_req)
+        except Exception as e:
+            return Response({"detail": f"Error generating rephrase: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        try:
+            self.get_serializer().update_history(
+                staff=request.user,
+                rephrase_req=rephrase_req,
+                rephrase_response=rephrase_response
+            )
+
+            return Response(rephrase_response, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Error updating history: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def list(self, request, *args, **kwargs):
+        """List rephrase history for the authenticated staff"""
+        try:
+            history = self.get_queryset().filter(staff=request.user).first()
+            if not history:
+                return Response({"detail": "Rephrase history not found"}, status=status.HTTP_404_NOT_FOUND)
+
+            serializer = self.get_serializer(history)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
