@@ -81,10 +81,10 @@ class PandSDocumentSerializer(serializers.ModelSerializer):
 class RephraseHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = RephraseHistory
-        fields = ['id', 'history']
+        fields = ['id', 'staff', 'history']
         read_only_fields = ['last_updated']
 
-    def update_history(self, staff, rephrase_req, agent_response):
+    def update_history(self, staff, rephrase_req, rephrase_response):
         """Concatenate rephrase request and agent response to history"""
         rephrase_history, _ = RephraseHistory.objects.get_or_create(
             staff=staff,
@@ -92,8 +92,8 @@ class RephraseHistorySerializer(serializers.ModelSerializer):
         )
         rephrase_history.history += '{"role": "user", "content": "' + rephrase_req + \
             '"}</eot>{"role": "assistant", "content": "' + \
-            agent_response + '"}</eot>'
-        print("the rephrase_history: ", rephrase_history.history)
+            rephrase_response + '"}</eot>'
+        # print("the rephrase_history: ", rephrase_history.history)
         rephrase_history.save()
-        print("rephrase_history updated and saved to database")
+        # print("rephrase_history updated and saved to database")
         return rephrase_history
