@@ -28,7 +28,7 @@ const EditDoc = ({doc, setDoc, btnClicked}: Props) => {
     return (
         <div className="grid w-full gap-3">
                                 <Textarea 
-                                    className='bbBox2 p-6 h-[70vh]' 
+                                    className='bbBox2 p-6 h-[65vh]' 
                                     placeholder="Type your document here."
                                     value={doc}
                                     onChange={(e) => {setDoc(e.target.value); console.log("input changed: ", e.target.value)}}
