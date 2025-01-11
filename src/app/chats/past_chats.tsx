@@ -38,7 +38,7 @@ const PastChats = () => {
           {history.map((item, id) => (
             <li 
               key={id}
-              className='mb-2 colorGradText' 
+              className='mb-2 colorGradText hover-bbBox2' 
               onClick={() => router.push(`/chats/${item.customer_name}?new=false`)}
             >
               {item.customer_name}

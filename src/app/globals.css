@@ -355,6 +355,12 @@ body {
   /* box-shadow: 4px 4px 4px 4px rgba(115, 103, 240, 0.6); */
 }
 
+.hover-bbBox2:hover {
+    border-radius: 10px;
+    border: 2px solid;
+    border-image: linear-gradient(45deg, #ff6ec7, #7367f0) 1;
+}
+
 .stretchText {
   letter-spacing: 5.6px;
 }
