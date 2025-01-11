@@ -75,7 +75,7 @@ const AddNewChat = () => {
                 )}
               />
               {showError && <p className='text-red-300 text-sm'>Name can not be empty</p>}
-              <Button type="submit">Submit</Button>
+              <Button type="submit">Continue</Button>
               <Button 
                 className='ml-5 text-red-300' 
                 type="reset"
