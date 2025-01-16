@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState, useLayoutEffect } from 'react'
-import { redirect, useParams, useSearchParams } from 'next/navigation'
+import { redirect, useParams, useSearchParams, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import ChatBody from '@/app/chat/chat-body'
 import { capitalizeUsername } from '@/app/utils'
@@ -14,33 +14,31 @@ const CustomChat = () => {
   const [name, setName] = useState(capitalizeUsername(params?.slug as string))
   const searchParams = useSearchParams()
   const isNew = searchParams.get('new') === 'true';
+  const router = useRouter();
   // console.log("The URL search params: ", isNew)
   // console.log("The URL params: ", params)
   const [chatHistory, setChatHistory] = useState<Messages[]>([]);
-
-  useEffect(() => {
-    const validateName = async () => {
-      const response = await axios.get('/api/chat')
-      const data: AllHistory[] = await response.data
-      // console.log("all available histories: ", data)
-      if(!data.some(customer => customer.customer_name === name)) {
-        return redirect('/404')
-      } else return;
-    }
-
-    validateName()
-
-  }, [name])
   
   useEffect(() => {
 
-    if (name.includes('%20')) {
-      setName(name => name.replace('%20', ' '))
-    }
-
-    if (isNew) return;
-
     const fetchChatHistory = async (name: string) => {
+      try {
+        const response = await axios.get('/api/chat')
+        const data: AllHistory[] = await response.data
+        // console.log("all available histories: ", data)
+        if(!data.some(customer => customer.customer_name === name)) {
+          return router.push('/404')
+        }
+      } catch (error) {
+        console.error("the chat history error: ", error)
+      }
+
+      if (name.includes('%20')) {
+        setName(name => name.replace('%20', ' '))
+      }
+
+      if (isNew) return;
+
       try {
         const response = await axios.get('/api/chat', {
         params: { name }
