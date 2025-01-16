@@ -1,11 +1,11 @@
 "use client"
 import React, { useEffect, useState, useLayoutEffect } from 'react'
-import { useParams, useSearchParams } from 'next/navigation'
+import { redirect, useParams, useSearchParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import ChatBody from '@/app/chat/chat-body'
 import { capitalizeUsername } from '@/app/utils'
 import axios from 'axios'
-import { Messages } from '@/types'
+import { AllHistory, Messages } from '@/types'
 
 
 const CustomChat = () => {
@@ -17,6 +17,20 @@ const CustomChat = () => {
   // console.log("The URL search params: ", isNew)
   // console.log("The URL params: ", params)
   const [chatHistory, setChatHistory] = useState<Messages[]>([]);
+
+  useEffect(() => {
+    const validateName = async () => {
+      const response = await axios.get('/api/chat')
+      const data: AllHistory[] = await response.data
+      // console.log("all available histories: ", data)
+      if(!data.some(customer => customer.customer_name === name)) {
+        return redirect('/404')
+      } else return;
+    }
+
+    validateName()
+
+  }, [name])
   
   useEffect(() => {
 
@@ -32,17 +46,17 @@ const CustomChat = () => {
         params: { name }
       })
       const data = await response.data
-      console.log("The chat history response: ", data)
+      // console.log("The chat history response: ", data)
       const data_arr = data['email_thread'].split('</eot>')
       data_arr.pop() // Remove the last empty item
-      console.log("The data array: ", data_arr)
+      // console.log("The data array: ", data_arr)
 
       const parsed_data_arr = data_arr.map((item: string) => {
         item = item.replace(/[\n\r]/g, "\\n"); //Escapes any newline (\n) or carriage return (\r) characters, making them valid JSON.
         return JSON.parse(item)
       });
 
-      console.log("The parsed data array: ", parsed_data_arr)
+      // console.log("The parsed data array: ", parsed_data_arr)
 
       setChatHistory(parsed_data_arr as Messages[])
 
