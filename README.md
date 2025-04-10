@@ -1,4 +1,5 @@
-This is an AI Agent Chatbot built with Langchain, Langgraph, Llama 3 via Groq API, Chroma Vector Database, Google Embedding Model and Django Rest Framework.
+This is an AI Agent Chatbot built with Langchain, Langgraph, Llama 3 via Groq API, Chroma Vector Database, Google Embedding Model and Django Rest Framework.  
+_Switch to the backend branch to view the backend_
 
 ## Description
 
