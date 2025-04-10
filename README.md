@@ -13,10 +13,10 @@ Developed an AI-powered email assistant for Pearon Blu Hotel using LangChain, La
   <br>
 - Dynamic chat for each customer with persistent history while getting real-time information like pricing, amenities etc about Pearon Blu from the Agentic RAG.
   <br>
-  ![persistent chat](./public//pb/dynamic%20chat%20for%20each%20customer%20with%20persistent%20history.png)
+  ![persistent chat](./public/pb/dynamic%20chat%20for%20each%20customer%20with%20persistent%20history.png)
   <br>
 - Modify RAG document to add and update informations about the hotel policies, pricing, amenities, availability, services and packages etc.
-  ![RAG Document page](./public//pb/Modify%20and%20add%20DOC%20for%20the%20Agentic%20RAG.png)
+  ![RAG Document page](./public/pb/Modify%20and%20add%20DOC%20for%20the%20Agentic%20RAG.png)
   <br>
   <br>
 - When A staff draft's an email suggesting it best suits the customer's request, A quick rephrasal can be done to ensure tone consistency and clarity.
